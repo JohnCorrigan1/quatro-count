@@ -24,18 +24,18 @@ type GroupProps = {
 
 const Group = (props: GroupProps) => {
   return (
-<Link href="/app/(tabs)/two.tsx" asChild>
-    <Pressable>
-    <View style={styles.group}>
-      <View style={styles.text}>
-        <Text style={styles.header}>{props.name}</Text>
-        <Text style={styles.description}>
-          {props.description}
-        </Text>
-      </View>
-      <Text style={styles.header}>></Text>
-    </View>
-</Pressable>
+    <Link href={`/${props.name}`} asChild>
+      <Pressable>
+        <View style={styles.group}>
+          <View style={styles.text}>
+            <Text style={styles.header}>{props.name}</Text>
+            <Text style={styles.description}>
+              {props.description}
+            </Text>
+          </View>
+          <Text style={styles.header}>p</Text>
+        </View>
+      </Pressable>
     </Link>
   );
 };
