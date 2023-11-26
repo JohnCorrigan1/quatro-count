@@ -34,7 +34,7 @@ export default function TabLayout() {
         options={{
           title: "Groups",
           tabBarIcon: ({ color }) => (
-            <TabBarIcon name="code" color={color} />
+            <TabBarIcon name="group" color={color} />
           ),
           headerRight: () => (
             <Link href="/modal" asChild>
@@ -58,11 +58,11 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="account"
         options={{
-          title: "Tab Two",
+          title: "Account",
           tabBarIcon: ({ color }) => (
-            <TabBarIcon name="code" color={color} />
+            <TabBarIcon name="user" color={color} />
           ),
         }}
       />

@@ -1,6 +1,7 @@
 import { Text, View, StyleSheet } from "react-native";
 import { Link } from "expo-router";
 import { Pressable } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
 
 export const GroupContainer = () => {
   return (
@@ -33,7 +34,11 @@ const Group = (props: GroupProps) => {
               {props.description}
             </Text>
           </View>
-          <Text style={styles.header}>p</Text>
+          <FontAwesome
+            name="chevron-right"
+            size={20}
+            color="black"
+          />
         </View>
       </Pressable>
     </Link>

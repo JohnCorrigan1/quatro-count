@@ -64,7 +64,7 @@ function RootLayoutNav() {
           options={{ presentation: "modal" }}
         />
         <Stack.Screen
-          name="group"
+          name="[group]"
           options={{ headerShown: false }}
         />
       </Stack>
