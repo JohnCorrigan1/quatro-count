@@ -1,14 +1,5 @@
-import {
-  Text,
-  View,
-  StyleSheet,
-  useColorScheme,
-} from "react-native";
-import React, {
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { Text, View, StyleSheet, useColorScheme } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "expo-router";
 import { Pressable } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
@@ -28,12 +19,8 @@ export const GroupContainer = () => {
 
   return (
     <View style={styles.container}>
-      {groups?.map((group: any, index: any) => (
-        <Group
-          name={group.name}
-          description={group.description}
-          key={index}
-        />
+      {groups?.map((group: Group, index: any) => (
+        <Group name={group.name} description={group.description} key={index} />
       ))}
     </View>
   );
@@ -79,9 +66,7 @@ const Group = (props: GroupProps) => {
         <View style={styles.group}>
           <View style={styles.text}>
             <Text style={styles.header}>{props.name}</Text>
-            <Text style={styles.description}>
-              {props.description}
-            </Text>
+            <Text style={styles.description}>{props.description}</Text>
           </View>
           <FontAwesome
             name="chevron-right"

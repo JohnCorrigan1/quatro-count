@@ -9,6 +9,7 @@ import {
 import { FontAwesome } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 import { Link, Stack, useLocalSearchParams } from "expo-router";
+
 type Expense = {
   title: string;
   for: string[];

@@ -22,14 +22,29 @@ export default function ModalScreen() {
 }
 
 const ExpenseForm = () => {
+  const groupMembers = [
+    { name: "Juicer", included: true },
+    { name: "Juicer2", included: true },
+    { name: "Juicer3", included: true },
+  ];
   const [title, setTitle] = useState("");
-  const [paidFor, setPaidFor] = useState([]);
+  const [paidFor, setPaidFor] = useState(groupMembers);
   const [paidBy, setPaidBy] = useState("Juicer");
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState("0");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
-  const [isChecked, setIsChecked] = useState(false);
   const router = useRouter();
+
+  const updatePaidFor = (e: any) => {
+    const updated = paidFor.map((member) => {
+      if (member.name === e) {
+        return { ...member, included: !member.included };
+      }
+      return member;
+    });
+    setPaidFor(updated);
+    console.log(e);
+  };
 
   function back() {
     router.push({
@@ -48,8 +63,9 @@ const ExpenseForm = () => {
       />
       <Text style={styles.label}>Amount:</Text>
       <TextInput
-        inputMode="numeric"
-        value={amount}
+        placeholder="$0.00"
+        inputMode="decimal"
+        value={amount == "0" ? "" : amount}
         onChange={(e) => setAmount(e.nativeEvent.text)}
         style={styles.input}
       />
@@ -100,7 +116,26 @@ const ExpenseForm = () => {
         </RNPickerSelect>
       </View>
       <Text style={styles.label}>Paid For:</Text>
-      <Checkbox value={isChecked} onValueChange={setIsChecked} />
+      <View style={styles.checkboxGroup}>
+        {paidFor.map((member) => (
+          <View
+            onTouchEnd={() => updatePaidFor(member.name)}
+            key={member.name}
+            style={styles.checkbox}
+          >
+            <View>
+              <Text style={styles.label}>{member.name}</Text>
+              <Checkbox value={member.included} />
+            </View>
+            <Text style={styles.label}>
+              $
+              {0
+                ? amount == "0"
+                : (parseFloat(amount) / paidFor.length).toFixed(2)}
+            </Text>
+          </View>
+        ))}
+      </View>
       <Pressable>
         <Text style={styles.label} onPress={back}>
           Add
@@ -111,6 +146,17 @@ const ExpenseForm = () => {
 };
 
 const styles = StyleSheet.create({
+  checkboxGroup: {
+    display: "flex",
+    flexDirection: "column",
+  },
+  checkbox: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 10,
+    borderWidth: 1,
+  },
   dropdown: {
     display: "flex",
     flexDirection: "row",
