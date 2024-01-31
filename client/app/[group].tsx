@@ -1,5 +1,11 @@
 import { useState } from "react";
 import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  QueryKey,
+} from "@tanstack/react-query";
+import {
   View,
   Text,
   StyleSheet,
@@ -42,9 +48,28 @@ const exampleExpenses: Expense[] = [
   },
 ];
 
+type Group = {
+  name: string;
+  members: string[];
+  expenses: Expense[];
+};
+
 export default function GroupPage() {
+  const queryClient = useQueryClient();
   const { group } = useLocalSearchParams();
+
+  const query = useQuery({
+    queryKey: ["groupData"],
+    queryFn: () =>
+      Promise.resolve({
+        name: group,
+        members: ["Andrew", "Nathan"],
+        expenses: exampleExpenses,
+      }),
+  });
+
   const colorScheme = useColorScheme();
+
   const styles = StyleSheet.create({
     page: {
       display: "flex",
@@ -74,13 +99,11 @@ export default function GroupPage() {
     },
   });
 
-  const [expenses, setExpenses] = useState<Expense[]>(exampleExpenses);
-
   return (
     <>
       <Stack.Screen options={{ title: group.toString() }} />
       <View style={styles.page}>
-        {expenses.map((expense, index) => (
+        {query.data?.expenses.map((expense, index) => (
           <Expense {...expense} key={index} />
         ))}
         <Link style={groupStyles.addGroup} href="/addexpense" asChild>

@@ -1,4 +1,8 @@
-import { StyleSheet, Pressable, useColorScheme } from "react-native";
+import {
+  StyleSheet,
+  Pressable,
+  useColorScheme,
+} from "react-native";
 import { GroupContainer } from "../../components/GroupContainer";
 import { View } from "../../components/Themed";
 import { FontAwesome } from "@expo/vector-icons";
@@ -7,8 +11,37 @@ import Colors from "../../constants/Colors";
 import { useEffect } from "react";
 import { useGroupDispatch } from "../lib/GroupContext";
 import { useLocalSearchParams } from "expo-router";
+import {
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 export default function TabOneScreen() {
+  const queryClient = useQueryClient();
+
+  const getCurrentUser = async () => {
+    return await fetch(
+      "http://127.0.0.1:5000/api/users/1"
+    ).then((res) => res.json());
+  };
+
+  const { isLoading, isError, data } = useQuery({
+    queryKey: ["currentUser"],
+    queryFn: getCurrentUser,
+  });
+
+  useEffect(() => {
+    if (isLoading) {
+      console.log("loading...");
+      return;
+    }
+    if (isError) {
+      console.log("error...");
+      return;
+    }
+    console.log(data);
+  }, [data]);
+
   const colorScheme = useColorScheme();
 
   const groupStyles = StyleSheet.create({
@@ -31,7 +64,6 @@ export default function TabOneScreen() {
   const params = useLocalSearchParams();
   const { name, description } = params;
   useEffect(() => {
-    console.log(params);
     if (!name || !description) return;
     if (name == "" || description == "") return;
     dispatch({
@@ -46,7 +78,10 @@ export default function TabOneScreen() {
   return (
     <View style={styles.container}>
       <GroupContainer />
-      <Link style={groupStyles.addGroup} href="/newgroup" asChild>
+      <Link
+        style={groupStyles.addGroup}
+        href="/newgroup"
+        asChild>
         <Pressable>
           {({ pressed }) => (
             <FontAwesome

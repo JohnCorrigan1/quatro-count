@@ -8,12 +8,12 @@ import { useRouter } from "expo-router";
 import Checkbox from "expo-checkbox";
 import RNPickerSelect from "react-native-picker-select";
 import { FontAwesome } from "@expo/vector-icons";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function ModalScreen() {
   return (
     <GroupsProvider>
       <View>
-        {/* Use a light status bar on iOS to account for the black space above the modal */}
         <ExpenseForm />
         <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
       </View>
@@ -22,6 +22,7 @@ export default function ModalScreen() {
 }
 
 const ExpenseForm = () => {
+  const queryClient = useQueryClient();
   const groupMembers = [
     { name: "Juicer", included: true },
     { name: "Juicer2", included: true },
@@ -45,6 +46,23 @@ const ExpenseForm = () => {
     setPaidFor(updated);
     console.log(e);
   };
+
+  //   const { mutate: addExpense } = useMutation(
+  //     (expense: any) => {
+  //       return new Promise((resolve) => {
+  //         setTimeout(() => {
+  //           resolve(expense);
+  //         }, 1000);
+  //       });
+  //     }
+  //     onSucess: (expense) => {
+  //     queryClient.invalidateQueries({queryKey: ["groupData"]}, (data: any) => {
+  //       return [...data, expense];
+  //     });
+  //   }
+
+  //   )
+  // }
 
   function back() {
     router.push({
