@@ -4,20 +4,10 @@ import {
   StyleSheet,
   useColorScheme,
 } from "react-native";
-import React, {
-  useContext,
-  useEffect,
-  useState,
-} from "react";
-import {
-  useQuery,
-  QueryClient,
-} from "@tanstack/react-query";
 import { Link } from "expo-router";
 import { Pressable } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
-import { useGroups } from "../app/lib/GroupContext";
 
 export const GroupContainer = (props: any) => {
   const styles = StyleSheet.create({
@@ -28,28 +18,14 @@ export const GroupContainer = (props: any) => {
     },
   });
 
-  const queryClient = new QueryClient();
-
-  // useEffect(() => {
-  //   const userGroups: any = queryClient.getQueryData([
-  //     "currentUser",
-  //   ]);
-  //   // if (!userGroups) {
-  //   // console.log("loading");
-  //   // return;
-  //   // }
-  //   if (userGroups) setGroups(userGroups.groups);
-  //   // setGroups(userGroups.groups);
-  //   // console.log("ye", userGroups.groups);
-  // }, [queryClient]);
-  // const groups = useGroups();
   return (
     <View style={styles.container}>
-      {props.groups?.map((group: any, index: any) => (
+      {props.groups?.map((group: GroupProps) => (
         <Group
+          id={group.id}
           name={group.name}
           description={group.description}
-          key={index}
+          key={group.id}
         />
       ))}
     </View>
@@ -57,6 +33,7 @@ export const GroupContainer = (props: any) => {
 };
 
 type GroupProps = {
+  id: number;
   name: string;
   description: string;
 };
@@ -91,7 +68,11 @@ const Group = (props: GroupProps) => {
     },
   });
   return (
-    <Link href={`/${props.name}`} asChild>
+    <Link
+      href={`/${props.name
+        .replace(" ", "")
+        .toLowerCase()}?gid=${props.id}`}
+      asChild>
       <Pressable>
         <View style={styles.group}>
           <View style={styles.text}>
@@ -103,7 +84,7 @@ const Group = (props: GroupProps) => {
           <FontAwesome
             name="chevron-right"
             size={20}
-            color={Colors[colorScheme ?? "light"].tint}
+            color={Colors[colorScheme ?? "light"].text}
           />
         </View>
       </Pressable>

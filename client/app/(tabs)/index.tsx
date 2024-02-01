@@ -1,20 +1,12 @@
-import {
-  StyleSheet,
-  Pressable,
-  useColorScheme,
-} from "react-native";
+import { StyleSheet } from "react-native";
 import { GroupContainer } from "../../components/GroupContainer";
 import { View } from "../../components/Themed";
-import { FontAwesome } from "@expo/vector-icons";
-import { Link } from "expo-router";
-import Colors from "../../constants/Colors";
 import { useEffect, useState } from "react";
-import { useGroupDispatch } from "../lib/GroupContext";
-import { useLocalSearchParams } from "expo-router";
 import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import { AddGroupButton } from "../../components/AddGroupButton";
 
 export default function TabOneScreen() {
   const queryClient = useQueryClient();
@@ -32,68 +24,18 @@ export default function TabOneScreen() {
   });
 
   useEffect(() => {
-    if (isLoading) {
-      console.log("loading...");
-      return;
-    }
+    if (isLoading) return;
     if (isError) {
       console.log("error...");
       return;
     }
     setGroups(data.groups);
-    console.log(data);
   }, [data]);
-
-  const colorScheme = useColorScheme();
-
-  const groupStyles = StyleSheet.create({
-    addGroup: {
-      display: "flex",
-      position: "absolute",
-      bottom: 50,
-      right: 30,
-      borderRadius: 50,
-      height: 60,
-      width: 60,
-      alignItems: "center",
-      justifyContent: "center",
-      backgroundColor: Colors[colorScheme ?? "light"].tint,
-    },
-  });
-
-  //get params from router from another page
-  const dispatch = useGroupDispatch();
-  const params = useLocalSearchParams();
-  const { name, description } = params;
-  useEffect(() => {
-    if (!name || !description) return;
-    if (name == "" || description == "") return;
-    dispatch({
-      type: "add",
-      payload: {
-        name,
-        description,
-      },
-    });
-  }, [params]);
 
   return (
     <View style={styles.container}>
       <GroupContainer groups={groups} />
-      <Link
-        style={groupStyles.addGroup}
-        href="/newgroup"
-        asChild>
-        <Pressable>
-          {({ pressed }) => (
-            <FontAwesome
-              name="plus"
-              size={32}
-              color={Colors[colorScheme ?? "light"].text}
-            />
-          )}
-        </Pressable>
-      </Link>
+      <AddGroupButton />
     </View>
   );
 }

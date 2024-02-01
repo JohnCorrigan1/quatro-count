@@ -8,8 +8,10 @@ import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
 import { useColorScheme } from "react-native";
-import { GroupsProvider } from "./lib/GroupContext";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 
 const queryClient = new QueryClient();
 
@@ -55,18 +57,28 @@ function RootLayoutNav() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <GroupsProvider>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-            <Stack.Screen name="newgroup" options={{ presentation: "modal" }} />
-            <Stack.Screen
-              name="addexpense"
-              options={{ presentation: "modal" }}
-            />
-          </Stack>
-        </GroupsProvider>
+      <ThemeProvider
+        value={
+          colorScheme === "dark" ? DarkTheme : DefaultTheme
+        }>
+        <Stack>
+          <Stack.Screen
+            name="(tabs)"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="modal"
+            options={{ presentation: "modal" }}
+          />
+          <Stack.Screen
+            name="newgroup"
+            options={{ presentation: "modal" }}
+          />
+          <Stack.Screen
+            name="addexpense"
+            options={{ presentation: "modal" }}
+          />
+        </Stack>
       </ThemeProvider>
     </QueryClientProvider>
   );

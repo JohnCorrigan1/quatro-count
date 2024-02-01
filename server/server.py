@@ -80,14 +80,14 @@ groups = [
         "id": 1,
         "name": "Group 1",
         "description": "This is the first group",
-        "expenses": expenses[0],
+        "expenses": expenses,
         "members": [users[0], users[1]]
     },
     {
         "id": 2,
         "name": "Group 2",
         "description": "This is the second group",
-        "expenses": expenses[1],
+        "expenses": [expenses[1]],
         "members": [users[0], users[1], users[2], users[3]]
     }
 ]
@@ -121,10 +121,10 @@ def get_user_groups(user_id):
     user = next((user for user in users if user["id"] == user_id), None)
     return {"groups": user["groups"]}
 
-@app.route("/api/groups/<group_id>")
+@app.route("/api/groups/<int:group_id>")
 def get_group(group_id):
     group = next((group for group in groups if group["id"] == group_id), None)
-    return {"group": group}
+    return group
 
 @app.route("/api/groups/<group_id>/expenses")
 def get_group_expenses(group_id):

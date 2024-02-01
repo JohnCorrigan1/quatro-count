@@ -1,71 +1,31 @@
-import { useState } from "react";
 import {
   useQuery,
-  useMutation,
   useQueryClient,
-  QueryKey,
 } from "@tanstack/react-query";
 import {
   View,
-  Text,
   StyleSheet,
   useColorScheme,
-  Pressable,
 } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
-import { Link, Stack, useLocalSearchParams } from "expo-router";
-
-type Expense = {
-  title: string;
-  for: string[];
-  paidBy: string;
-  amount: number;
-  date?: Date;
-};
-
-const exampleExpenses: Expense[] = [
-  {
-    title: "Rent",
-    for: ["Andrew", "Nathan"],
-    paidBy: "Andrew",
-    amount: 2000,
-    date: new Date(),
-  },
-  {
-    title: "Groceries",
-    for: ["Andrew", "Nathan"],
-    paidBy: "Nathan",
-    amount: 100,
-    date: new Date(),
-  },
-  {
-    title: "Internet",
-    for: ["Andrew", "Nathan"],
-    paidBy: "Andrew",
-    amount: 100,
-    date: new Date(),
-  },
-];
-
-type Group = {
-  name: string;
-  members: string[];
-  expenses: Expense[];
-};
+import { Stack, useLocalSearchParams } from "expo-router";
+import { Expense } from "../components/Expense";
+import { AddExpenseButton } from "../components/AddExpenseButton";
+import { Loading } from "../components/Loading";
 
 export default function GroupPage() {
   const queryClient = useQueryClient();
-  const { group } = useLocalSearchParams();
+  const { _group, gid } = useLocalSearchParams();
 
-  const query = useQuery({
+  const getGroupData = async () => {
+    return await fetch(
+      `http://127.0.0.1:5000/api/groups/${gid}`
+    ).then((res) => res.json());
+  };
+
+  const { isLoading, isError, data } = useQuery({
     queryKey: ["groupData"],
-    queryFn: () =>
-      Promise.resolve({
-        name: group,
-        members: ["Andrew", "Nathan"],
-        expenses: exampleExpenses,
-      }),
+    queryFn: getGroupData,
   });
 
   const colorScheme = useColorScheme();
@@ -84,66 +44,20 @@ export default function GroupPage() {
       width: "100%",
     },
   });
-  const groupStyles = StyleSheet.create({
-    addGroup: {
-      display: "flex",
-      position: "absolute",
-      bottom: 50,
-      right: 30,
-      borderRadius: 50,
-      height: 60,
-      width: 60,
-      alignItems: "center",
-      justifyContent: "center",
-      backgroundColor: Colors[colorScheme ?? "light"].tint,
-    },
-  });
 
   return (
     <>
-      <Stack.Screen options={{ title: group.toString() }} />
+      <Stack.Screen options={{ title: data?.name }} />
       <View style={styles.page}>
-        {query.data?.expenses.map((expense, index) => (
-          <Expense {...expense} key={index} />
-        ))}
-        <Link style={groupStyles.addGroup} href="/addexpense" asChild>
-          <Pressable>
-            {({ pressed }) => (
-              <FontAwesome
-                name="plus"
-                size={32}
-                color={Colors[colorScheme ?? "light"].text}
-              />
-            )}
-          </Pressable>
-        </Link>
+        {isLoading ? (
+          <Loading />
+        ) : (
+          data?.expenses.map((expense: any) => (
+            <Expense {...expense} key={expense.id} />
+          ))
+        )}
+        <AddExpenseButton />
       </View>
     </>
-  );
-}
-
-function Expense(expense: Expense) {
-  const styles = StyleSheet.create({
-    expense: {
-      display: "flex",
-      flexDirection: "row",
-      padding: 30,
-      width: "100%",
-      borderBottomColor: "black",
-      borderBottomWidth: 1,
-    },
-    column: {
-      display: "flex",
-      justifyContent: "center",
-      width: "33.33%",
-    },
-  });
-
-  return (
-    <View style={styles.expense}>
-      <Text style={styles.column}>{expense.title}</Text>
-      <Text style={styles.column}>${expense.amount}</Text>
-      <Text style={styles.column}>{expense.paidBy}</Text>
-    </View>
   );
 }
