@@ -1,27 +1,30 @@
 import { StatusBar } from "expo-status-bar";
-import { Platform, Pressable, StyleSheet } from "react-native";
+import {
+  Platform,
+  Pressable,
+  StyleSheet,
+} from "react-native";
 import { useState } from "react";
 import { Text, View } from "../components/Themed";
 import { TextInput } from "react-native-gesture-handler";
-import { GroupsProvider } from "./lib/GroupContext";
 import { useRouter } from "expo-router";
 import Checkbox from "expo-checkbox";
-import RNPickerSelect from "react-native-picker-select";
-import { FontAwesome } from "@expo/vector-icons";
+import { useQueryClient } from "@tanstack/react-query";
+import { FormDropdown } from "../components/FormDropdown";
 
 export default function ModalScreen() {
   return (
-    <GroupsProvider>
-      <View>
-        {/* Use a light status bar on iOS to account for the black space above the modal */}
-        <ExpenseForm />
-        <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
-      </View>
-    </GroupsProvider>
+    <View>
+      <ExpenseForm />
+      <StatusBar
+        style={Platform.OS === "ios" ? "light" : "auto"}
+      />
+    </View>
   );
 }
 
 const ExpenseForm = () => {
+  const queryClient = useQueryClient();
   const groupMembers = [
     { name: "Juicer", included: true },
     { name: "Juicer2", included: true },
@@ -71,49 +74,19 @@ const ExpenseForm = () => {
       />
       <Text style={styles.label}>Paid By:</Text>
       <View style={styles.input}>
-        <RNPickerSelect
+        <FormDropdown
           value={paidBy}
-          onValueChange={(value) => setPaidBy(value)}
-          items={[
-            { label: "Item 1", value: "item1" },
-            {
-              label: "Juicer",
-              value: "Juicer",
-            },
-            { label: "Item 2", value: "item2" },
-          ]}
-          pickerProps={{
-            accessibilityLabel: "select who paid for the expense",
-          }}
-        >
-          <View style={styles.dropdown}>
-            <Text style={styles.label}>{paidBy}</Text>
-            <FontAwesome name="chevron-down" size={14} color="black" />
-          </View>
-        </RNPickerSelect>
+          setValue={setPaidBy}
+          items={members}
+        />
       </View>
       <Text style={styles.label}>Category (optional):</Text>
       <View style={styles.input}>
-        <RNPickerSelect
+        <FormDropdown
           value={category}
-          onValueChange={(value) => setCategory(value)}
-          items={[
-            { label: "Groceries", value: "Groceries" },
-            {
-              label: "Juice",
-              value: "Juice",
-            },
-            { label: "other", value: "other" },
-          ]}
-          pickerProps={{
-            accessibilityLabel: "Select the expense category.",
-          }}
-        >
-          <View style={styles.dropdown}>
-            <Text style={styles.label}>{category}</Text>
-            <FontAwesome name="chevron-down" size={14} color="black" />
-          </View>
-        </RNPickerSelect>
+          setValue={setCategory}
+          items={categories}
+        />
       </View>
       <Text style={styles.label}>Paid For:</Text>
       <View style={styles.checkboxGroup}>
@@ -121,17 +94,20 @@ const ExpenseForm = () => {
           <View
             onTouchEnd={() => updatePaidFor(member.name)}
             key={member.name}
-            style={styles.checkbox}
-          >
+            style={styles.checkbox}>
             <View>
-              <Text style={styles.label}>{member.name}</Text>
+              <Text style={styles.label}>
+                {member.name}
+              </Text>
               <Checkbox value={member.included} />
             </View>
             <Text style={styles.label}>
               $
               {0
                 ? amount == "0"
-                : (parseFloat(amount) / paidFor.length).toFixed(2)}
+                : (
+                    parseFloat(amount) / paidFor.length
+                  ).toFixed(2)}
             </Text>
           </View>
         ))}
@@ -156,12 +132,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
     borderWidth: 1,
-  },
-  dropdown: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
   },
   title: {
     fontSize: 20,
@@ -194,3 +164,21 @@ const styles = StyleSheet.create({
     width: "80%",
   },
 });
+
+const members = [
+  { label: "Item 1", value: "item1" },
+  {
+    label: "Juicer",
+    value: "Juicer",
+  },
+  { label: "Item 2", value: "item2" },
+];
+
+const categories = [
+  { label: "Groceries", value: "Groceries" },
+  {
+    label: "Juice",
+    value: "Juice",
+  },
+  { label: "other", value: "other" },
+];

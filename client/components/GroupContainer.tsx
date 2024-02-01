@@ -1,12 +1,15 @@
-import { Text, View, StyleSheet, useColorScheme } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import {
+  Text,
+  View,
+  StyleSheet,
+  useColorScheme,
+} from "react-native";
 import { Link } from "expo-router";
 import { Pressable } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
-import { useGroups } from "../app/lib/GroupContext";
 
-export const GroupContainer = () => {
+export const GroupContainer = (props: any) => {
   const styles = StyleSheet.create({
     container: {
       display: "flex",
@@ -15,18 +18,22 @@ export const GroupContainer = () => {
     },
   });
 
-  const groups = useGroups();
-
   return (
     <View style={styles.container}>
-      {groups?.map((group: Group, index: any) => (
-        <Group name={group.name} description={group.description} key={index} />
+      {props.groups?.map((group: GroupProps) => (
+        <Group
+          id={group.id}
+          name={group.name}
+          description={group.description}
+          key={group.id}
+        />
       ))}
     </View>
   );
 };
 
 type GroupProps = {
+  id: number;
   name: string;
   description: string;
 };
@@ -61,17 +68,23 @@ const Group = (props: GroupProps) => {
     },
   });
   return (
-    <Link href={`/${props.name}`} asChild>
+    <Link
+      href={`/${props.name
+        .replace(" ", "")
+        .toLowerCase()}?gid=${props.id}`}
+      asChild>
       <Pressable>
         <View style={styles.group}>
           <View style={styles.text}>
             <Text style={styles.header}>{props.name}</Text>
-            <Text style={styles.description}>{props.description}</Text>
+            <Text style={styles.description}>
+              {props.description}
+            </Text>
           </View>
           <FontAwesome
             name="chevron-right"
             size={20}
-            color={Colors[colorScheme ?? "light"].tint}
+            color={Colors[colorScheme ?? "light"].text}
           />
         </View>
       </Pressable>

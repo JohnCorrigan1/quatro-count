@@ -1,20 +1,23 @@
 import { StatusBar } from "expo-status-bar";
-import { Platform, Pressable, StyleSheet } from "react-native";
+import {
+  Platform,
+  Pressable,
+  StyleSheet,
+} from "react-native";
 import { useState } from "react";
 import { Text, View } from "../components/Themed";
 import { TextInput } from "react-native-gesture-handler";
-import { GroupsProvider } from "./lib/GroupContext";
 import { useRouter } from "expo-router";
 
 export default function ModalScreen() {
   return (
-    <GroupsProvider>
-      <View>
-        {/* Use a light status bar on iOS to account for the black space above the modal */}
-        <GroupForm />
-        <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
-      </View>
-    </GroupsProvider>
+    <View>
+      {/* Use a light status bar on iOS to account for the black space above the modal */}
+      <GroupForm />
+      <StatusBar
+        style={Platform.OS === "ios" ? "light" : "auto"}
+      />
+    </View>
   );
 }
 
