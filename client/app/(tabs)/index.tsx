@@ -8,7 +8,7 @@ import { View } from "../../components/Themed";
 import { FontAwesome } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import Colors from "../../constants/Colors";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useGroupDispatch } from "../lib/GroupContext";
 import { useLocalSearchParams } from "expo-router";
 import {
@@ -18,6 +18,7 @@ import {
 
 export default function TabOneScreen() {
   const queryClient = useQueryClient();
+  const [groups, setGroups] = useState<any>([]);
 
   const getCurrentUser = async () => {
     return await fetch(
@@ -39,6 +40,7 @@ export default function TabOneScreen() {
       console.log("error...");
       return;
     }
+    setGroups(data.groups);
     console.log(data);
   }, [data]);
 
@@ -77,7 +79,7 @@ export default function TabOneScreen() {
 
   return (
     <View style={styles.container}>
-      <GroupContainer />
+      <GroupContainer groups={groups} />
       <Link
         style={groupStyles.addGroup}
         href="/newgroup"

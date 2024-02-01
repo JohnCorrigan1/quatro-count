@@ -9,13 +9,17 @@ import React, {
   useEffect,
   useState,
 } from "react";
+import {
+  useQuery,
+  QueryClient,
+} from "@tanstack/react-query";
 import { Link } from "expo-router";
 import { Pressable } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 import { useGroups } from "../app/lib/GroupContext";
 
-export const GroupContainer = () => {
+export const GroupContainer = (props: any) => {
   const styles = StyleSheet.create({
     container: {
       display: "flex",
@@ -24,11 +28,24 @@ export const GroupContainer = () => {
     },
   });
 
-  const groups = useGroups();
+  const queryClient = new QueryClient();
 
+  // useEffect(() => {
+  //   const userGroups: any = queryClient.getQueryData([
+  //     "currentUser",
+  //   ]);
+  //   // if (!userGroups) {
+  //   // console.log("loading");
+  //   // return;
+  //   // }
+  //   if (userGroups) setGroups(userGroups.groups);
+  //   // setGroups(userGroups.groups);
+  //   // console.log("ye", userGroups.groups);
+  // }, [queryClient]);
+  // const groups = useGroups();
   return (
     <View style={styles.container}>
-      {groups?.map((group: any, index: any) => (
+      {props.groups?.map((group: any, index: any) => (
         <Group
           name={group.name}
           description={group.description}

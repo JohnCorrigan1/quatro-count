@@ -2,7 +2,6 @@ from flask import Flask
 from flask_cors import CORS
 
 app = Flask(__name__)
-
 CORS(app)
 
 users = [
@@ -101,7 +100,7 @@ def hello_world():
 def get_users():
     return {"users": users}
 
-@app.route("/api/users/<user_id>")
+@app.route("/api/users/<int:user_id>")
 def get_user(user_id):
     user = next((user for user in users if user["id"] == user_id), None)
     if user is None:
@@ -137,7 +136,5 @@ def get_group_members(group_id):
     group = next((group for group in groups if group["id"] == group_id), None)
     return {"members": group["members"]}
 
-
-
 if __name__ == "__main__":
-    app.run(debug=True) 
+    app.run(host='0.0.0.0', port=5000, debug=True)
