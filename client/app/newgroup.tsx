@@ -1,9 +1,14 @@
+import type { CurrentUser } from "./lib/types";
 import { StatusBar } from "expo-status-bar";
 import {
   Platform,
   Pressable,
   StyleSheet,
 } from "react-native";
+import {
+  useQueryClient,
+  useMutation,
+} from "@tanstack/react-query";
 import { useState } from "react";
 import { Text, View } from "../components/Themed";
 import { TextInput } from "react-native-gesture-handler";
@@ -22,15 +27,45 @@ export default function ModalScreen() {
 }
 
 const GroupForm = () => {
+  const queryClient = useQueryClient();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+
+  const postGroup = async () => {
+    const currentUser: CurrentUser | undefined =
+      await queryClient.getQueryData(["currentUser"]);
+
+    return await fetch("http://127.0.0.1:5000/api/groups", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name,
+        description,
+        userId: currentUser?.id,
+        currentGroups: currentUser?.groups.map(
+          (group) => group.id
+        ),
+      }),
+    }).then((res) => res.json());
+  };
+
+  const mutation = useMutation({
+    mutationFn: postGroup,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["currentUser"],
+      });
+    },
+  });
 
   const router = useRouter();
 
   function back() {
+    mutation.mutate();
     router.push({
       pathname: "/",
-      params: { name, description },
     });
   }
   return (
