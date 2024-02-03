@@ -36,3 +36,14 @@ export type GroupMember = {
   groupId: number;
   currentBalance: number;
 };
+
+export type PaidFor = {
+  username: string;
+  groupMemberId: number;
+  included: boolean;
+};
+
+export type PaidByMap = {
+  label: string;
+  value: number;
+};

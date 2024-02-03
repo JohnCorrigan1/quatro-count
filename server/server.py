@@ -10,54 +10,6 @@ supabase: Client = create_client(url, key)
 app = Flask(__name__)
 CORS(app, origins=['http://localhost:8081', 'http://localhost:8080', 'http://127.0.0.1:5000'])
 
-expenses = [
-    {
-        "id": 1,
-        "name": "Costco",
-        "amount": 100,
-        "date": "2021-09-01",
-        "group_id": 1,
-        "paid_by": "John",
-        "paid_for": "John, Jane"
-    },
-    {
-        "id": 2,
-        "name": "Safeway",
-        "amount": 50,
-        "date": "2021-09-02",
-        "group_id": 1,
-        "paid_by": "Jane",
-        "paid_for": "John, Jane"
-    },
-    {
-        "id": 3,
-        "name": "Target",
-        "amount": 75,
-        "date": "2021-09-03",
-        "group_id": 1,
-        "paid_by": "John",
-        "paid_for": "John, Jane"
-    },
-    {
-        "id": 4,
-        "name": "Walmart",
-        "amount": 200,
-        "date": "2021-09-04",
-        "group_id": 2,
-        "paid_by": "John",
-        "paid_for": "John, Jane, Bob, Alice"
-    },
-    {
-        "id": 5,
-        "name": "Amazon",
-        "amount": 300,
-        "date": "2021-09-05",
-        "group_id": 2,
-        "paid_by": "Bob",
-        "paid_for": "John, Jane, Bob, Alice"
-    }
-]
-
 @app.route("/api/users", methods=['POST'] )
 @cross_origin()
 def create_user():
@@ -95,7 +47,7 @@ def create_group():
 def get_group(group_id):
     data, count = supabase.table('groups').select("group_name", "description", "members").eq('id', group_id).execute()
     expenses, count = supabase.table('expenses').select("*").eq('group_id', group_id).execute()
-    response = { "id": group_id, "name": data[1][0]["group_name"], "description": data[1][0]["description"], "members": []}
+    response = { "id": group_id, "name": data[1][0]["group_name"], "description": data[1][0]["description"], "members": [], "expenses": expenses[1]}
     for member in data[1][0]["members"]:
         group_member, _count = supabase.table('groupMembers').select('*').eq('user_id', member).eq('group_id', group_id).execute()
         response["members"].append({"groupMemberId": group_member[1][0]['id'], "userId": group_member[1][0]["user_id"], "groupId": group_member[1][0]["group_id"], "username": group_member[1][0]["username"], "currentBalance": group_member[1][0]["current_balance"]})
@@ -105,14 +57,15 @@ def get_group(group_id):
 @cross_origin()
 def create_expense():
     group_id = request.get_json().get('groupId', '')
-    expense_name = request.get_json().get('name', '')
+    expense_name = request.get_json().get('title', '')
+    print(expense_name)
     expense_amount = request.get_json().get('amount', '')
     paid_by = request.get_json().get('paidBy', '')
     paid_for = request.get_json().get('paidFor', [])
     description = request.get_json().get('description', '')
     category = request.get_json().get('category', '')
-    result, count = supabase.table('expenses').insert({"name": expense_name, "description": description, "amount": expense_amount, "group_id": group_id, "paid_by": paid_by, "paid_for": paid_for, "category": category}).execute()
-    return {"message": "Expense created", "id": result[1][0]['id'], "name": result[1][0]['name'], "amount": result[1][0]['amount'], "date": result[1][0]['created_at'], "paid_by": result[1][0]['paid_by'], "paid_for": result[1][0]['paid_for']}
+    result, count = supabase.table('expenses').insert({"title": expense_name, "description": description, "amount": expense_amount, "group_id": group_id, "paid_by": paid_by, "paid_for": paid_for, "category": category}).execute()
+    return {"message": "Expense created", "id": result[1][0]['id'], "title": result[1][0]['title'], "amount": result[1][0]['amount'], "date": result[1][0]['created_at'], "paid_by": result[1][0]['paid_by'], "paid_for": result[1][0]['paid_for']}
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)

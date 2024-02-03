@@ -1,4 +1,5 @@
 import type { CurrentUser } from "./lib/types";
+import { formStyles } from "./lib/staticStyles";
 import { StatusBar } from "expo-status-bar";
 import {
   Platform,
@@ -45,7 +46,7 @@ const GroupForm = () => {
         name,
         description,
         userId: currentUser?.id,
-        username: currentUser?.name,
+        username: currentUser?.username,
         currentGroups: currentUser?.groups.map(
           (group) => group.id
         ),
@@ -59,6 +60,9 @@ const GroupForm = () => {
       queryClient.invalidateQueries({
         queryKey: ["currentUser"],
       });
+      router.push({
+        pathname: "/",
+      });
     },
   });
 
@@ -66,63 +70,26 @@ const GroupForm = () => {
 
   function back() {
     mutation.mutate();
-    router.push({
-      pathname: "/",
-    });
   }
   return (
-    <View style={styles.form}>
-      <Text style={styles.label}>Group Name:</Text>
+    <View style={formStyles.form}>
+      <Text style={formStyles.label}>Group Name:</Text>
       <TextInput
         value={name}
         onChange={(e) => setName(e.nativeEvent.text)}
-        style={styles.input}
+        style={formStyles.input}
       />
-      <Text style={styles.label}>Description:</Text>
+      <Text style={formStyles.label}>Description:</Text>
       <TextInput
         value={description}
         onChange={(e) => setDescription(e.nativeEvent.text)}
-        style={styles.input}
+        style={formStyles.input}
       />
       <Pressable>
-        <Text style={styles.label} onPress={back}>
+        <Text style={formStyles.label} onPress={back}>
           Add
         </Text>
       </Pressable>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
-  input: {
-    height: 40,
-    width: "80%",
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-    color: "white",
-  },
-  form: {
-    width: "100%",
-    height: "100%",
-    padding: 20,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: "600",
-    textAlign: "left",
-    width: "80%",
-  },
-});

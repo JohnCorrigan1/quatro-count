@@ -13,9 +13,9 @@ import { Expense } from "../components/Expense";
 import { AddExpenseButton } from "../components/AddExpenseButton";
 import { Loading } from "../components/Loading";
 import type { Group } from "./lib/types";
+import { useEffect } from "react";
 
 export default function GroupPage() {
-  const queryClient = useQueryClient();
   const { _group, gid } = useLocalSearchParams();
 
   const getGroupData = async (): Promise<Group> => {
@@ -28,6 +28,10 @@ export default function GroupPage() {
     queryKey: ["groupData"],
     queryFn: getGroupData,
   });
+
+  useEffect(() => {
+    console.log("group data", data);
+  }, [data]);
 
   const colorScheme = useColorScheme();
 
