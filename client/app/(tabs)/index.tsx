@@ -1,3 +1,4 @@
+import type { CurrentUser } from "../lib/types";
 import { StyleSheet } from "react-native";
 import { GroupContainer } from "../../components/GroupContainer";
 import { View } from "../../components/Themed";
@@ -12,9 +13,9 @@ export default function TabOneScreen() {
   const queryClient = useQueryClient();
   const [groups, setGroups] = useState<any>([]);
 
-  const getCurrentUser = async () => {
+  const getCurrentUser = async (): Promise<CurrentUser> => {
     return await fetch(
-      "http://127.0.0.1:5000/api/users/1"
+      "http://127.0.0.1:5000/api/users/18"
     ).then((res) => res.json());
   };
 
@@ -23,13 +24,25 @@ export default function TabOneScreen() {
     queryFn: getCurrentUser,
   });
 
+  const createUser = async () => {
+    const username = "John Doe";
+    const response = await fetch(
+      "http://127.0.0.1:5000/api/users",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username }),
+      }
+    );
+    const data = await response.json();
+    return data;
+  };
+
   useEffect(() => {
     if (isLoading) return;
-    if (isError) {
-      console.log("error...");
-      return;
-    }
-    setGroups(data.groups);
+    setGroups(data?.groups);
   }, [data]);
 
   return (

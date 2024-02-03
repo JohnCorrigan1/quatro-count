@@ -5,6 +5,7 @@ import { FontAwesome } from "@expo/vector-icons";
 export const FormDropdown = (props: any) => {
   return (
     <RNPickerSelect
+      placeholder={{}}
       value={props.value}
       onValueChange={(value) => props.setValue(value)}
       items={props.items}>
