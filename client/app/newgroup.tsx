@@ -34,6 +34,7 @@ const GroupForm = () => {
   const postGroup = async () => {
     const currentUser: CurrentUser | undefined =
       await queryClient.getQueryData(["currentUser"]);
+    console.log("before post group", currentUser);
 
     return await fetch("http://127.0.0.1:5000/api/groups", {
       method: "POST",
@@ -44,6 +45,7 @@ const GroupForm = () => {
         name,
         description,
         userId: currentUser?.id,
+        username: currentUser?.name,
         currentGroups: currentUser?.groups.map(
           (group) => group.id
         ),
@@ -107,6 +109,7 @@ const styles = StyleSheet.create({
     margin: 12,
     borderWidth: 1,
     padding: 10,
+    color: "white",
   },
   form: {
     width: "100%",

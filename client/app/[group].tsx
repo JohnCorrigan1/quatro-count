@@ -12,12 +12,13 @@ import { Stack, useLocalSearchParams } from "expo-router";
 import { Expense } from "../components/Expense";
 import { AddExpenseButton } from "../components/AddExpenseButton";
 import { Loading } from "../components/Loading";
+import type { Group } from "./lib/types";
 
 export default function GroupPage() {
   const queryClient = useQueryClient();
   const { _group, gid } = useLocalSearchParams();
 
-  const getGroupData = async () => {
+  const getGroupData = async (): Promise<Group> => {
     return await fetch(
       `http://127.0.0.1:5000/api/groups/${gid}`
     ).then((res) => res.json());
@@ -52,7 +53,7 @@ export default function GroupPage() {
         {isLoading ? (
           <Loading />
         ) : (
-          data?.expenses.map((expense: any) => (
+          data?.expenses?.map((expense) => (
             <Expense {...expense} key={expense.id} />
           ))
         )}

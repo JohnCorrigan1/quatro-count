@@ -4,7 +4,12 @@ import {
   Pressable,
   StyleSheet,
 } from "react-native";
-import { useState } from "react";
+import {
+  type Group,
+  type Expense,
+  CurrentUser,
+} from "./lib/types";
+import { useState, useEffect } from "react";
 import { Text, View } from "../components/Themed";
 import { TextInput } from "react-native-gesture-handler";
 import { useRouter } from "expo-router";
@@ -25,34 +30,82 @@ export default function ModalScreen() {
 
 const ExpenseForm = () => {
   const queryClient = useQueryClient();
-  const groupMembers = [
-    { name: "Juicer", included: true },
-    { name: "Juicer2", included: true },
-    { name: "Juicer3", included: true },
-  ];
+
+  type PaidBy = {
+    username: string;
+    groupMemberId: number;
+  };
+
+  type PaidFor = {
+    username: string;
+    groupMemberId: number;
+    included: boolean;
+  };
+
   const [title, setTitle] = useState("");
-  const [paidFor, setPaidFor] = useState(groupMembers);
-  const [paidBy, setPaidBy] = useState("Juicer");
+  const [paidFor, setPaidFor] = useState<any>(null);
+  const [paidBy, setPaidBy] = useState<any>(null);
+  const [paidByMap, setPaidByMap] = useState<any>(null);
   const [amount, setAmount] = useState("0");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const router = useRouter();
+  const groupData = queryClient.getQueryData<Group>([
+    "groupData",
+  ]);
 
-  const updatePaidFor = (e: any) => {
-    const updated = paidFor.map((member) => {
-      if (member.name === e) {
+  const currentUser = queryClient.getQueryData<CurrentUser>(
+    ["currentUser"]
+  );
+  useEffect(() => {
+    if (!groupData) return;
+    if (!currentUser) return;
+    console.log("groiupData", groupData);
+    console.log("currentuser", currentUser);
+
+    const members = groupData.members.map((member) => {
+      return {
+        username: member.username,
+        groupMemberId: 1,
+        included: true,
+      };
+    });
+    const dudes = groupData.members.map((member) => {
+      return {
+        label: member.username,
+        value: member.username,
+      };
+    });
+
+    setPaidByMap(dudes);
+
+    setPaidFor(members);
+
+    const currentGroupMember = groupData?.members.find(
+      (member) => member.userId === currentUser?.id
+    );
+    console.log("currentGroupMember", currentGroupMember);
+
+    setPaidBy({
+      username: currentGroupMember!.username,
+      groupMemberId: currentGroupMember!.groupMemberId,
+    });
+    console.log("paidfor", paidFor);
+  }, [groupData, currentUser]);
+
+  const updatePaidFor = (groupMemberId: number) => {
+    const updated = paidFor?.map((member: any) => {
+      if (member.groupMemberId === groupMemberId) {
         return { ...member, included: !member.included };
       }
       return member;
     });
-    setPaidFor(updated);
-    console.log(e);
+    if (updated) setPaidFor(updated);
   };
 
   function back() {
     router.push({
       pathname: "/",
-      params: { title, description },
     });
   }
   return (
@@ -73,31 +126,54 @@ const ExpenseForm = () => {
         style={styles.input}
       />
       <Text style={styles.label}>Paid By:</Text>
-      <View style={styles.input}>
-        <FormDropdown
-          value={paidBy}
-          setValue={setPaidBy}
-          items={members}
-        />
-      </View>
+      {paidFor && paidBy ? (
+        <View style={styles.input}>
+          <FormDropdown
+            // label="Paid By"
+            // value={paidBy.username}
+            setValue={setPaidBy}
+            items={paidFor?.map((member: any) => {
+              return {
+                label: member!.username,
+                // value: member.groupMemberId,
+                value: member!.username,
+                // label: "g shit",
+                // value: member.groupMemberId,
+                // key: member.groupMemberId,
+                // color: null,
+              };
+            })}
+          />
+        </View>
+      ) : (
+        ""
+      )}
       <Text style={styles.label}>Category (optional):</Text>
       <View style={styles.input}>
-        <FormDropdown
+        {/* <FormDropdown
           value={category}
           setValue={setCategory}
-          items={categories}
-        />
+          items={categories.map((category) => {
+            return {
+              label: category,
+              value: category,
+              key: category,
+            };
+          })}
+        /> */}
       </View>
       <Text style={styles.label}>Paid For:</Text>
       <View style={styles.checkboxGroup}>
-        {paidFor.map((member) => (
+        {/* {paidFor?.map((member) => (
           <View
-            onTouchEnd={() => updatePaidFor(member.name)}
-            key={member.name}
+            onTouchEnd={() =>
+              updatePaidFor(member.groupMemberId)
+            }
+            key={member.groupMemberId}
             style={styles.checkbox}>
             <View>
               <Text style={styles.label}>
-                {member.name}
+                {member.username}
               </Text>
               <Checkbox value={member.included} />
             </View>
@@ -110,7 +186,7 @@ const ExpenseForm = () => {
                   ).toFixed(2)}
             </Text>
           </View>
-        ))}
+        ))} */}
       </View>
       <Pressable>
         <Text style={styles.label} onPress={back}>
