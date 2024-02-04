@@ -25,7 +25,7 @@ export default function TabOneScreen() {
   });
 
   const createUser = async () => {
-    const username = "John Doe";
+    const username = "Jane Doe";
     const response = await fetch(
       "http://127.0.0.1:5000/api/users",
       {
