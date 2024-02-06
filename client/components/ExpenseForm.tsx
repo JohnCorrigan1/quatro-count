@@ -15,6 +15,7 @@ import {
 import { TextInput } from "react-native-gesture-handler";
 import { CheckboxGroup } from "../components/CheckboxGroup";
 import { FormDropdown } from "../components/FormDropdown";
+import { Button } from "react-native-elements";
 
 export const ExpenseForm = () => {
   const queryClient = useQueryClient();
@@ -27,7 +28,8 @@ export const ExpenseForm = () => {
   const currentUser = queryClient.getQueryData<CurrentUser>(
     ["currentUser"]
   );
-
+  const [buttonDisabled, setButtonDisabled] =
+    useState(false);
   const [title, setTitle] = useState("");
   const [paidFor, setPaidFor] = useState<PaidFor[] | null>(
     null
@@ -105,6 +107,7 @@ export const ExpenseForm = () => {
   }, [groupData, currentUser]);
 
   function back() {
+    setButtonDisabled(true);
     mutation.mutate();
   }
   return (
@@ -156,11 +159,11 @@ export const ExpenseForm = () => {
       ) : (
         ""
       )}
-      <Pressable>
-        <Text style={formStyles.label} onPress={back}>
-          Add
-        </Text>
-      </Pressable>
+      <Button
+        title="Add"
+        onPress={back}
+        disabled={buttonDisabled}
+      />
     </View>
   );
 };
