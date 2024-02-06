@@ -8,42 +8,45 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { AddGroupButton } from "../../components/AddGroupButton";
+import { Redirect, useRouter } from "expo-router";
+import { SignedIn, useUser } from "@clerk/clerk-expo";
 
 export default function TabOneScreen() {
+  const { isLoaded, isSignedIn, user } = useUser();
   const queryClient = useQueryClient();
   const [groups, setGroups] = useState<any>([]);
+  const router = useRouter();
 
-  const getCurrentUser = async (): Promise<CurrentUser> => {
-    return await fetch(
-      "http://127.0.0.1:5000/api/users/18"
-    ).then((res) => res.json());
+  const getCurrentUser = async (): Promise<
+    CurrentUser | undefined
+  > => {
+    const response = await fetch(
+      `http://127.0.0.1:5000/api/users/${user?.id}`
+    );
+    if (response.ok) {
+      return response.json();
+    } else {
+      router.push("/createaccount");
+      // throw new Error("Something went wrong");
+    }
   };
 
   const { isLoading, isError, data } = useQuery({
     queryKey: ["currentUser"],
     queryFn: getCurrentUser,
+    enabled: !!user,
+    retry: false,
   });
-
-  const createUser = async () => {
-    const username = "Jane Doe";
-    const response = await fetch(
-      "http://127.0.0.1:5000/api/users",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username }),
-      }
-    );
-    const data = await response.json();
-    return data;
-  };
 
   useEffect(() => {
     if (isLoading) return;
     setGroups(data?.groups);
-  }, [data]);
+    console.log("user", user?.id);
+  }, [data, user]);
+
+  if (!isSignedIn && isLoaded) {
+    return <Redirect href="/login" />;
+  }
 
   return (
     <View style={styles.container}>

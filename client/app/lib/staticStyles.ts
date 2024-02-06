@@ -48,3 +48,25 @@ export const formStyles = StyleSheet.create({
     color: "white",
   },
 });
+
+export const basestyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "white",
+  },
+  separator: {
+    marginVertical: 30,
+    height: 1,
+    width: "80%",
+  },
+  icon: {
+    color: "white",
+    backgroundColor: "blue",
+  },
+});

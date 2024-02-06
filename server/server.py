@@ -14,15 +14,16 @@ CORS(app, origins=['http://localhost:8081', 'http://localhost:8080', 'http://127
 @cross_origin()
 def create_user():
     username = request.get_json().get('username', '')
-    result, count = supabase.table('users').insert({"username": username}).execute()
+    clerk_id = request.get_json().get('clerk_id', '')
+    result, count = supabase.table('users').insert({"username": username, "clerk_id": clerk_id}).execute()
     print(result)
     return {"message": "User created", "id": result[1][0]['id'], "username": result[1][0]['username']} 
 
-@app.route("/api/users/<int:user_id>")
+@app.route("/api/users/<string:clerk_id>")
 @cross_origin()
-def get_user(user_id):
-    data, count = supabase.table('users').select("username, groups").eq('id', user_id).execute()
-    response = { "id": user_id, "username": data[1][0]["username"], "groups": []}
+def get_user(clerk_id):
+    data, count = supabase.table('users').select("id, username, groups").eq('clerk_id', clerk_id).execute()
+    response = { "id": data[1][0]["id"], "username": data[1][0]["username"], "groups": []}
     for i in data[1][0]["groups"]:
         group, _count = supabase.table('groups').select("group_name", "description").eq('id', i).execute()
         response["groups"].append({"id": i, "name": group[1][0]["group_name"], "description": group[1][0]["description"]})

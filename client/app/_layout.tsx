@@ -13,7 +13,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import { ClerkProvider } from "@clerk/clerk-expo";
+import ClerkProvider from "./ClerkProvider";
 
 const queryClient = new QueryClient();
 
@@ -65,12 +65,8 @@ function RootLayoutNav() {
   );
 
   return (
-    <ClerkProvider publishableKey={publishableKey}>
+    <ClerkProvider>
       <QueryClientProvider client={queryClient}>
-        {/* <ClerkProvider
-        publishableKey={
-          process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!
-        }> */}
         <GestureHandlerRootView style={{ flex: 1 }}>
           <ThemeProvider
             value={
@@ -83,6 +79,8 @@ function RootLayoutNav() {
                 name="(tabs)"
                 options={{ headerShown: false }}
               />
+              <Stack.Screen name="login" />
+              <Stack.Screen name="createaccount" />
               <Stack.Screen
                 name="modal"
                 options={{ presentation: "modal" }}
@@ -98,7 +96,6 @@ function RootLayoutNav() {
             </Stack>
           </ThemeProvider>
         </GestureHandlerRootView>
-        {/* </ClerkProvider> */}
       </QueryClientProvider>
     </ClerkProvider>
   );
