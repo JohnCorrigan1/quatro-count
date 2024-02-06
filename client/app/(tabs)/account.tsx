@@ -1,28 +1,11 @@
-import { StyleSheet } from "react-native";
-
-import { Text, View } from "../../components/Themed";
+import { View } from "../../components/Themed";
+import { basestyles } from "../lib/staticStyles";
+import { AccountPage } from "../../components/AccountPage";
 
 export default function AccountScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Account page</Text>
+    <View style={basestyles.container}>
+      <AccountPage />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
-});

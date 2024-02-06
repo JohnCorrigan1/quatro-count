@@ -1,4 +1,5 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import {
   DarkTheme,
   DefaultTheme,
@@ -12,6 +13,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
+import ClerkProvider from "./ClerkProvider";
 
 const queryClient = new QueryClient();
 
@@ -52,34 +54,49 @@ export default function RootLayout() {
   return <RootLayoutNav />;
 }
 
+const publishableKey =
+  "pk_test_ZGVjZW50LXNsb3RoLTE1LmNsZXJrLmFjY291bnRzLmRldiQ";
+
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
+  console.log(
+    process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY
+  );
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider
-        value={
-          colorScheme === "dark" ? DarkTheme : DefaultTheme
-        }>
-        <Stack>
-          <Stack.Screen
-            name="(tabs)"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="modal"
-            options={{ presentation: "modal" }}
-          />
-          <Stack.Screen
-            name="newgroup"
-            options={{ presentation: "modal" }}
-          />
-          <Stack.Screen
-            name="addexpense"
-            options={{ presentation: "modal" }}
-          />
-        </Stack>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <ClerkProvider>
+      <QueryClientProvider client={queryClient}>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <ThemeProvider
+            value={
+              colorScheme === "dark"
+                ? DarkTheme
+                : DefaultTheme
+            }>
+            <Stack>
+              <Stack.Screen
+                name="(tabs)"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen name="login" />
+              <Stack.Screen name="createaccount" />
+              <Stack.Screen
+                name="modal"
+                options={{ presentation: "modal" }}
+              />
+              <Stack.Screen
+                name="newgroup"
+                options={{ presentation: "modal" }}
+              />
+              <Stack.Screen
+                name="addexpense"
+                options={{ presentation: "modal" }}
+              />
+            </Stack>
+          </ThemeProvider>
+        </GestureHandlerRootView>
+      </QueryClientProvider>
+    </ClerkProvider>
   );
 }

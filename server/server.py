@@ -14,15 +14,16 @@ CORS(app, origins=['http://localhost:8081', 'http://localhost:8080', 'http://127
 @cross_origin()
 def create_user():
     username = request.get_json().get('username', '')
-    result, count = supabase.table('users').insert({"username": username}).execute()
+    clerk_id = request.get_json().get('clerk_id', '')
+    result, count = supabase.table('users').insert({"username": username, "clerk_id": clerk_id, "groups": []}).execute()
     print(result)
     return {"message": "User created", "id": result[1][0]['id'], "username": result[1][0]['username']} 
 
-@app.route("/api/users/<int:user_id>")
+@app.route("/api/users/<string:clerk_id>")
 @cross_origin()
-def get_user(user_id):
-    data, count = supabase.table('users').select("username, groups").eq('id', user_id).execute()
-    response = { "id": user_id, "username": data[1][0]["username"], "groups": []}
+def get_user(clerk_id):
+    data, count = supabase.table('users').select("id, username, groups").eq('clerk_id', clerk_id).execute()
+    response = { "id": data[1][0]["id"], "username": data[1][0]["username"], "groups": []}
     for i in data[1][0]["groups"]:
         group, _count = supabase.table('groups').select("group_name", "description").eq('id', i).execute()
         response["groups"].append({"id": i, "name": group[1][0]["group_name"], "description": group[1][0]["description"]})
@@ -65,6 +66,18 @@ def create_expense():
     description = request.get_json().get('description', '')
     category = request.get_json().get('category', '')
     result, count = supabase.table('expenses').insert({"title": expense_name, "description": description, "amount": expense_amount, "group_id": group_id, "paid_by": paid_by, "paid_for": paid_for, "category": category}).execute()
+    amountPerPerson = expense_amount/len(paid_for)
+    if paid_by not in paid_for:
+        group_member, _count = supabase.table('groupMembers').select('*').eq('id', paid_by).eq('group_id', group_id).execute()
+        result, _count = supabase.table('groupMembers').update({"current_balance": group_member[1][0]['current_balance'] + expense_amount}).eq('id', group_member[1][0]['id']).execute()
+
+    for member in paid_for:
+        group_member, _count = supabase.table('groupMembers').select('*').eq('id', member).eq('group_id', group_id).execute()
+        if member == paid_by:
+            result, _count = supabase.table('groupMembers').update({"current_balance": group_member[1][0]['current_balance'] + (expense_amount - amountPerPerson)}).eq('id', group_member[1][0]['id']).execute()
+        else:
+            result, _count = supabase.table('groupMembers').update({"current_balance": group_member[1][0]['current_balance'] - (expense_amount/len(paid_for))}).eq('id', group_member[1][0]['id']).execute()
+
     return {"message": "Expense created", "id": result[1][0]['id'], "title": result[1][0]['title'], "amount": result[1][0]['amount'], "date": result[1][0]['created_at'], "paid_by": result[1][0]['paid_by'], "paid_for": result[1][0]['paid_for']}
 
 if __name__ == "__main__":
