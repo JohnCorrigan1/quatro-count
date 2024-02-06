@@ -1,19 +1,15 @@
 import type { CurrentUser } from "../lib/types";
-import { StyleSheet } from "react-native";
+import { basestyles } from "../lib/staticStyles";
 import { GroupContainer } from "../../components/GroupContainer";
-import { View } from "../../components/Themed";
+import { View, Text } from "../../components/Themed";
 import { useEffect, useState } from "react";
-import {
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { AddGroupButton } from "../../components/AddGroupButton";
 import { Redirect, useRouter } from "expo-router";
-import { SignedIn, useUser } from "@clerk/clerk-expo";
+import { useUser } from "@clerk/clerk-expo";
 
 export default function TabOneScreen() {
   const { isLoaded, isSignedIn, user } = useUser();
-  const queryClient = useQueryClient();
   const [groups, setGroups] = useState<any>([]);
   const router = useRouter();
 
@@ -27,7 +23,6 @@ export default function TabOneScreen() {
       return response.json();
     } else {
       router.push("/createaccount");
-      // throw new Error("Something went wrong");
     }
   };
 
@@ -49,29 +44,15 @@ export default function TabOneScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <GroupContainer groups={groups} />
+    <View style={basestyles.container}>
+      {data?.groups.length === 0 ? (
+        <Text style={basestyles.title}>
+          You have no friends...
+        </Text>
+      ) : (
+        <GroupContainer groups={groups} />
+      )}
       <AddGroupButton />
     </View>
   );
 }
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
-  icon: {
-    color: "white",
-    backgroundColor: "blue",
-  },
-});

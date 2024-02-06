@@ -15,7 +15,7 @@ CORS(app, origins=['http://localhost:8081', 'http://localhost:8080', 'http://127
 def create_user():
     username = request.get_json().get('username', '')
     clerk_id = request.get_json().get('clerk_id', '')
-    result, count = supabase.table('users').insert({"username": username, "clerk_id": clerk_id}).execute()
+    result, count = supabase.table('users').insert({"username": username, "clerk_id": clerk_id, "groups": []}).execute()
     print(result)
     return {"message": "User created", "id": result[1][0]['id'], "username": result[1][0]['username']} 
 

@@ -1,11 +1,11 @@
-import { StyleSheet } from "react-native";
-import { Text, View } from "../../components/Themed";
+import { View } from "../../components/Themed";
 import { basestyles } from "../lib/staticStyles";
+import { AccountPage } from "../../components/AccountPage";
 
 export default function AccountScreen() {
   return (
     <View style={basestyles.container}>
-      <Text style={basestyles.title}>Account page</Text>
+      <AccountPage />
     </View>
   );
 }

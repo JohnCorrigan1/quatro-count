@@ -6,11 +6,13 @@ import { formStyles } from "./lib/staticStyles";
 import { Button } from "react-native-elements";
 import { useUser } from "@clerk/clerk-expo";
 import { useRouter } from "expo-router";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function CreateAccountScreen() {
   const router = useRouter();
   const { user } = useUser();
   const [username, setUsername] = useState("");
+  const queryClient = useQueryClient();
 
   const createUser = async () => {
     if (username.length === 0 || !user) {
@@ -31,13 +33,14 @@ export default function CreateAccountScreen() {
     );
     if (response.ok) {
       console.log("User created");
+      queryClient.invalidateQueries({
+        queryKey: ["currentUser"],
+      });
       router.replace("/");
     }
   };
   return (
     <View style={styles.container}>
-      {/* <SignIn /> */}
-      {/* <Text style={styles.title}>Account page</Text> */}
       <Text style={formStyles.label}>
         Set a Display Username:
       </Text>
