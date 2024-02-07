@@ -95,6 +95,7 @@ function RootLayoutNav() {
               />
               <Stack.Screen
                 name="groups"
+                // options={{ title: router.params?.name }}
                 options={{ headerShown: false }}
               />
             </Stack>

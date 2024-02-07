@@ -16,7 +16,6 @@ import { Loading } from "../../components/Loading";
 import type { Group } from "../lib/types";
 
 export default function GroupPage() {
-  const route = useRouter();
   const { name, gid } = useLocalSearchParams();
   const router = useRouter();
 
@@ -52,7 +51,28 @@ export default function GroupPage() {
     <>
       <Stack.Screen
         options={{
+          headerBackTitle: "Groups",
+          headerBackButtonMenuEnabled: false,
+          headerBackVisible: false,
+          // headerBackVisible: true,
           title: data?.name,
+          headerLeft: () => (
+            <Pressable onPress={() => router.back()}>
+              {({ pressed }) => (
+                <FontAwesome
+                  name="arrow-left"
+                  size={20}
+                  color={
+                    Colors[colorScheme ?? "light"].text
+                  }
+                  style={{
+                    marginLeft: 10,
+                    opacity: pressed ? 0.5 : 1,
+                  }}
+                />
+              )}
+            </Pressable>
+          ),
           headerRight: () => (
             <Link
               push
@@ -81,7 +101,7 @@ export default function GroupPage() {
         }}
       />
 
-      <View style={styles.page}>
+      <View>
         {isLoading ? (
           <Loading />
         ) : (
@@ -90,14 +110,6 @@ export default function GroupPage() {
           ))
         )}
         <AddExpenseButton />
-        <Link
-          push
-          href={{
-            pathname: "/groups/settings",
-            params: { gid },
-          }}>
-          <Text style={{ color: "white" }}>Settings</Text>
-        </Link>
       </View>
     </>
   );
