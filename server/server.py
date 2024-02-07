@@ -1,6 +1,7 @@
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
 import os
+import uuid
 # load_dotenv()
 from supabase import create_client, Client
 url: str = os.getenv("SUPABASE_URL")
@@ -16,7 +17,6 @@ def create_user():
     username = request.get_json().get('username', '')
     clerk_id = request.get_json().get('clerk_id', '')
     result, count = supabase.table('users').insert({"username": username, "clerk_id": clerk_id, "groups": []}).execute()
-    print(result)
     return {"message": "User created", "id": result[1][0]['id'], "username": result[1][0]['username']} 
 
 @app.route("/api/users/<string:clerk_id>")
@@ -82,6 +82,22 @@ def create_expense():
 
     # return {"message": "Expense created", "id": result[1][0]['id'], "title": result[1][0]['title'], "amount": result[1][0]['amount'], "date": result[1][0]['created_at'], "paid_by": result[1][0]['paid_by'], "paid_for": result[1][0]['paid_for']}
     return {"message": "Expense created"}
+
+@app.route("/api/groups/invite", methods=['POST'])
+@cross_origin
+def create_invitation_link():
+    invited_by_username = request.get_json().get('username', '')
+    clerk_id = request.get_json().get('clerk_id', '')
+    group_id = request.get_json().get('groupId', '')
+    base_url = "http://localhost:8080/invite/"
+    invitation_link = base_url + str(uuid.uuid4())
+    user_id, _count = supabase.table('users').select('id', 'groups').eq('clerk_id', clerk_id).execute()
+    invitee_in_group = group_id in user_id[1][0]['groups'] 
+    if invitee_in_group == False:
+        return {"message": "You are not a member of this group"}
+    result, count = supabase.table('groupInvitations').insert({"group_id": group_id, "invitation_link": invitation_link, "invited_by_id": user_id[1][0]['user_id']}).execute()
+    return {"message": "Invitation link created", "link": invitation_link}
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)

@@ -93,6 +93,10 @@ function RootLayoutNav() {
                 name="addexpense"
                 options={{ presentation: "modal" }}
               />
+              <Stack.Screen
+                name="groups"
+                options={{ headerShown: false }}
+              />
             </Stack>
           </ThemeProvider>
         </GestureHandlerRootView>

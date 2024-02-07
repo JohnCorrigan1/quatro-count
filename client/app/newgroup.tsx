@@ -1,11 +1,7 @@
 import type { CurrentUser } from "./lib/types";
 import { formStyles } from "./lib/staticStyles";
 import { StatusBar } from "expo-status-bar";
-import {
-  Platform,
-  Pressable,
-  StyleSheet,
-} from "react-native";
+import { Platform } from "react-native";
 import {
   useQueryClient,
   useMutation,

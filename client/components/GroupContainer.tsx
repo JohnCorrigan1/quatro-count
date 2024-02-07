@@ -69,9 +69,13 @@ const Group = (props: GroupProps) => {
   });
   return (
     <Link
-      href={`/${props.name
-        .replace(" ", "")
-        .toLowerCase()}?gid=${props.id}`}
+      href={{
+        pathname: "/groups",
+        params: {
+          name: props.name.replace(" ", "").toLowerCase(),
+          gid: props.id,
+        },
+      }}
       asChild>
       <Pressable>
         <View style={styles.group}>
