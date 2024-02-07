@@ -1,11 +1,7 @@
 import type { CurrentUser } from "./lib/types";
 import { formStyles } from "./lib/staticStyles";
 import { StatusBar } from "expo-status-bar";
-import {
-  Platform,
-  Pressable,
-  StyleSheet,
-} from "react-native";
+import { Platform } from "react-native";
 import {
   useQueryClient,
   useMutation,
@@ -14,6 +10,7 @@ import { useState } from "react";
 import { Text, View } from "../components/Themed";
 import { TextInput } from "react-native-gesture-handler";
 import { useRouter } from "expo-router";
+import { Button } from "react-native-elements";
 
 export default function ModalScreen() {
   return (
@@ -31,6 +28,8 @@ const GroupForm = () => {
   const queryClient = useQueryClient();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [buttonDisabled, setButtonDisabled] =
+    useState(false);
 
   const postGroup = async () => {
     const currentUser: CurrentUser | undefined =
@@ -60,9 +59,7 @@ const GroupForm = () => {
       queryClient.invalidateQueries({
         queryKey: ["currentUser"],
       });
-      router.push({
-        pathname: "/",
-      });
+      router.back();
     },
   });
 
@@ -85,11 +82,11 @@ const GroupForm = () => {
         onChange={(e) => setDescription(e.nativeEvent.text)}
         style={formStyles.input}
       />
-      <Pressable>
-        <Text style={formStyles.label} onPress={back}>
-          Add
-        </Text>
-      </Pressable>
+      <Button
+        title="Add"
+        onPress={back}
+        disabled={buttonDisabled}
+      />
     </View>
   );
 };
