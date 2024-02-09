@@ -94,10 +94,11 @@ function RootLayoutNav() {
                 options={{ presentation: "modal" }}
               />
               <Stack.Screen
-                name="groups"
+                name="group"
                 // options={{ title: router.params?.name }}
                 options={{ headerShown: false }}
               />
+              <Stack.Screen name="invite" />
             </Stack>
           </ThemeProvider>
         </GestureHandlerRootView>
