@@ -2,11 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter, Link } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
 import {
-  View,
   StyleSheet,
   useColorScheme,
   Pressable,
-  Text,
+  ScrollView,
 } from "react-native";
 import Colors from "../../constants/Colors";
 import { Stack, useLocalSearchParams } from "expo-router";
@@ -18,6 +17,13 @@ import type { Group } from "../lib/types";
 export default function GroupPage() {
   const { name, gid } = useLocalSearchParams();
   const router = useRouter();
+
+  // const groupParams = useQuery({
+  //   queryKey: ["groupParams"],
+  //   queryFn: () => {
+  //     return { name, gid };
+  //   },
+  // });
 
   const getGroupData = async (): Promise<Group> => {
     return await fetch(
@@ -54,7 +60,6 @@ export default function GroupPage() {
           headerBackTitle: "Groups",
           headerBackButtonMenuEnabled: false,
           headerBackVisible: false,
-          // headerBackVisible: true,
           title: data?.name,
           headerLeft: () => (
             <Pressable onPress={() => router.back()}>
@@ -101,7 +106,7 @@ export default function GroupPage() {
         }}
       />
 
-      <View>
+      <ScrollView>
         {isLoading ? (
           <Loading />
         ) : (
@@ -109,8 +114,8 @@ export default function GroupPage() {
             <Expense {...expense} key={expense.id} />
           ))
         )}
-        <AddExpenseButton />
-      </View>
+      </ScrollView>
+      <AddExpenseButton />
     </>
   );
 }

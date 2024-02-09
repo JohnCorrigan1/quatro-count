@@ -3,11 +3,13 @@ import {
   View,
   StyleSheet,
   useColorScheme,
+  ScrollView,
 } from "react-native";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { Pressable } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const GroupContainer = (props: any) => {
   const styles = StyleSheet.create({
@@ -19,7 +21,7 @@ export const GroupContainer = (props: any) => {
   });
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       {props.groups?.map((group: GroupProps) => (
         <Group
           id={group.id}
@@ -28,7 +30,7 @@ export const GroupContainer = (props: any) => {
           key={group.id}
         />
       ))}
-    </View>
+    </ScrollView>
   );
 };
 
@@ -67,31 +69,42 @@ const Group = (props: GroupProps) => {
       color: "grey",
     },
   });
+  const queryClient = useQueryClient();
+  const router = useRouter();
+  const navigateToGroup = () => {
+    queryClient.setQueryData(["groupParams"], {
+      name: props.name.replace(" ", "").toLowerCase(),
+      gid: props.id,
+    });
+    router.push("/group");
+  };
+
   return (
-    <Link
-      href={{
-        pathname: "/groups",
-        params: {
-          name: props.name.replace(" ", "").toLowerCase(),
-          gid: props.id,
-        },
-      }}
-      asChild>
-      <Pressable>
-        <View style={styles.group}>
-          <View style={styles.text}>
-            <Text style={styles.header}>{props.name}</Text>
-            <Text style={styles.description}>
-              {props.description}
-            </Text>
-          </View>
-          <FontAwesome
-            name="chevron-right"
-            size={20}
-            color={Colors[colorScheme ?? "light"].text}
-          />
+    // <Link
+    //   href={{
+    //     pathname: "/group",
+    //     params: {
+    //       name: props.name.replace(" ", "").toLowerCase(),
+    //       gid: props.id,
+    //     },
+    //   }}
+    //   asChild>
+    <Pressable onPress={navigateToGroup}>
+      <View style={styles.group}>
+        <View style={styles.text}>
+          <Text style={styles.header}>{props.name}</Text>
+          <Text style={styles.description}>
+            {props.description}
+          </Text>
         </View>
-      </Pressable>
-    </Link>
+        <FontAwesome
+          name="chevron-right"
+          size={20}
+          color={Colors[colorScheme ?? "light"].text}
+        />
+      </View>
+    </Pressable>
+    //{" "}
+    // </Link>
   );
 };

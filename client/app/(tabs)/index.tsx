@@ -22,6 +22,7 @@ export default function TabOneScreen() {
     if (response.ok) {
       return response.json();
     } else {
+      console.log("not ok");
       router.push("/createaccount");
     }
   };

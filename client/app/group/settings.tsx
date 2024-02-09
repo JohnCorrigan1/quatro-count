@@ -1,32 +1,28 @@
-import {
-  Stack,
-  useLocalSearchParams,
-  Link,
-  useNavigation,
-} from "expo-router";
+import { Stack, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import {
-  View,
-  Text,
-  Pressable,
-  useColorScheme,
-} from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
-import Colors from "../../../constants/Colors";
-import { basestyles } from "../../lib/staticStyles";
+import { View, Text, useColorScheme } from "react-native";
+import { basestyles } from "../lib/staticStyles";
 import { Button } from "react-native-elements";
 import { useUser } from "@clerk/clerk-expo";
+import { useQuery } from "@tanstack/react-query";
 
 export default function GroupSettingsPage() {
   const [inviteLink, setInviteLink] = useState("");
   const { user } = useUser();
-  const { gid } = useLocalSearchParams();
-  console.log("gid", gid);
+  const { name, gid } = useLocalSearchParams();
   const colorScheme = useColorScheme();
-  const parentLayout = useNavigation(`/groups`);
+
+  // const groupParams = useQuery({
+  //   queryKey: ["groupParams"],
+  //   queryFn: () => {
+  //     console.log("name", name, "gid", gid);
+  //     return { name, gid };
+  //   },
+  // });
+
+  // const parentLayout = useNavigation(`/group`);
 
   const getInviteLink = async () => {
-    console.log("user", user?.id, gid);
     const link = await fetch(
       "http://127.0.0.1:5000/api/groups/invite",
       {
