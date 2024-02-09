@@ -107,5 +107,19 @@ def get_invitation_data(invitation_link):
     data, count = supabase.table('groupInvitations').select('*').eq('invitation_link', full_link).execute()
     return {"group_id": data[1][0]['group_id'], "invited_by_id": data[1][0]['invited_by_id']}
 
+@app.route("/api/groups/invite/accept", methods=['POST'])
+@cross_origin()
+def accept_invitation():
+    group_id = request.get_json().get('groupId', '')
+    user_id = request.get_json().get('userId', '')
+    username = request.get_json().get('username', '')
+    current_groups = request.get_json().get('currentGroups', [])
+    # current_groups, count = supabase.table('users').select('groups').eq('id', user_id).execute()
+    group_member, count = supabase.table('groupMembers').insert({"user_id": user_id, "group_id": group_id, "current_balance": 0.0, "username": username}).execute()
+    current_groups.append(group_id)
+    result, count = supabase.table('users').update({"groups": current_groups}).eq('id', user_id).execute()
+    result, count = supabase.table('groups').update({"members": current_groups}).eq('id', group_id).execute()
+    return {"message": "Invitation accepted"}
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)

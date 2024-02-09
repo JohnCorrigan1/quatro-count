@@ -5,14 +5,6 @@ import { useLocalSearchParams } from "expo-router";
 
 export default function BalancesPage() {
   const { name, gid } = useLocalSearchParams();
-  console.log("gid", gid, "name", name);
-
-  //   const groupParams = useQuery({
-  //     queryKey: ["groupParams"],
-  //     queryFn: () => {
-  //       return { name, gid };
-  //     },
-  //   });
 
   return (
     <View style={basestyles.container}>

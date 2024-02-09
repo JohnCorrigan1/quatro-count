@@ -18,13 +18,6 @@ export default function GroupPage() {
   const { name, gid } = useLocalSearchParams();
   const router = useRouter();
 
-  // const groupParams = useQuery({
-  //   queryKey: ["groupParams"],
-  //   queryFn: () => {
-  //     return { name, gid };
-  //   },
-  // });
-
   const getGroupData = async (): Promise<Group> => {
     return await fetch(
       `http://127.0.0.1:5000/api/groups/${gid}`
