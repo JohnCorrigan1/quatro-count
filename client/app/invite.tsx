@@ -46,7 +46,7 @@ export default function InvitePage() {
           userId: currentUser?.id,
           groupId: inviteData?.group_id,
           username: currentUser?.username,
-          groups: currentUser?.groups,
+          currentGroups: currentUser?.groups,
         }),
       }
     );
