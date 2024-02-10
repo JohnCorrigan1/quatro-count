@@ -16,10 +16,10 @@ def create_group(group_name, group_description, user_id, username, current_group
     result, count = main.supabase.table('groups').insert({
             "group_name": group_name,
             "description": group_description,
-            "members": [user_id]
+            "members": []
         }).execute()
    
-    add_user_to_group(user_id, result[1][0]['id'], username, current_groups) 
+    add_user_to_group(user_id, int(result[1][0]['id']), username, current_groups) 
    
     return {
         "message": "Group created",
@@ -29,6 +29,15 @@ def create_group(group_name, group_description, user_id, username, current_group
         }
 
 def add_user_to_group(user_id, group_id, username, current_groups):
+    group, _count = main.supabase.table('groups').select('members').eq('id', group_id).execute()
+    print("groups", group[1][0])
+    updated_members = group[1][0]['members']
+    updated_members.append(user_id)
+    print("updated members", updated_members)
+    group_members, _count = main.supabase.table('groups').update({
+       "members": updated_members
+         }).eq('id', group_id).execute() 
+       
     result, count = main.supabase.table('groupMembers').insert({
         "user_id": user_id,
         "group_id": group_id,
@@ -43,3 +52,40 @@ def add_user_to_group(user_id, group_id, username, current_groups):
         }).eq('id', user_id).execute()
     
     return {"message": "Group member created"}
+
+def get_group_data(group_id):
+    data, count = main.supabase.table('groups').select(
+        "group_name",
+        "description",
+        "members"
+        ).eq('id', group_id).execute()
+    
+    expenses = get_group_expenses(group_id)
+    members = get_group_members(data[1][0]["members"], group_id)
+    
+    return { 
+                "id": group_id,
+                "name": data[1][0]["group_name"],
+                "description": data[1][0]["description"],
+                "members": members,
+                "expenses": expenses
+                }
+
+def get_group_expenses(group_id):
+    expenses, count = main.supabase.table('expenses').select("*").eq('group_id', group_id).execute()
+    return expenses[1]
+
+def get_group_members(members, group_id):
+    member_data = []
+    for member in members:
+        group_member, _count = main.supabase.table('groupMembers').select('*').eq(
+            'user_id', member).eq('group_id', group_id).execute()
+        member_data.append({
+            "groupMemberId": group_member[1][0]['id'],
+            "userId": group_member[1][0]["user_id"],
+            "groupId": group_member[1][0]["group_id"],
+            "username": group_member[1][0]["username"],
+            "currentBalance": group_member[1][0]["current_balance"]
+        })
+    return member_data
+        

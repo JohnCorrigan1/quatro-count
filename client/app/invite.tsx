@@ -1,10 +1,16 @@
 import { useEffect, useState } from "react";
-import { useLocalSearchParams } from "expo-router";
+import {
+  useLocalSearchParams,
+  useRouter,
+} from "expo-router";
+import { useUser } from "@clerk/clerk-expo";
 import { View, Text } from "react-native";
 import { basestyles } from "./lib/staticStyles";
+import type { CurrentUser } from "./lib/types";
 import {
   QueryClient,
   useQueryClient,
+  useQuery,
 } from "@tanstack/react-query";
 import { Button } from "react-native-elements";
 
@@ -16,6 +22,8 @@ import { Button } from "react-native-elements";
 export default function InvitePage() {
   const { code } = useLocalSearchParams();
   const [inviteData, setInviteData] = useState<any>();
+  const router = useRouter();
+  const { user } = useUser();
 
   const getInviteData = async () => {
     const data = await fetch(
@@ -29,12 +37,30 @@ export default function InvitePage() {
   }, []);
 
   const queryClient = useQueryClient();
-  const currentUser: any = queryClient.getQueryData([
-    "currentUser",
-  ]);
+  const getCurrentUser = async (): Promise<
+    CurrentUser | undefined
+  > => {
+    const response = await fetch(
+      `http://127.0.0.1:5000/api/users/${user?.id}`
+    );
+    if (response.ok) {
+      // console.log(response.json());
+      return response.json();
+    } else {
+      console.log("not ok");
+      router.push("/createaccount");
+    }
+  };
+
+  const { isLoading, isError, data } = useQuery({
+    queryKey: ["currentUser"],
+    queryFn: getCurrentUser,
+    enabled: !!user,
+    retry: false,
+  });
 
   const acceptInvite = async () => {
-    if (!currentUser) return;
+    if (!data) return;
     await fetch(
       "http://127.0.0.1:5000/api/groups/invite/accept",
       {
@@ -43,20 +69,18 @@ export default function InvitePage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userId: currentUser?.id,
+          userId: data?.id,
           groupId: inviteData?.group_id,
-          username: currentUser?.username,
-          currentGroups: currentUser?.groups,
+          username: data?.username,
+          currentGroups: data?.groups,
         }),
       }
     );
   };
 
   useEffect(() => {
-    console.log("currentUser", currentUser);
-  }, [currentUser]);
-
-  console.log("currentUser", currentUser);
+    console.log("currentUser", data);
+  }, [data]);
 
   // useEffect(() => {
   // if (!code) return;

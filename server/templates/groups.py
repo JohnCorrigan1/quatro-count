@@ -25,14 +25,8 @@ def create_group():
 @groups.route("/<int:group_id>")
 @cross_origin()
 def get_group(group_id):
-    data, count = main.supabase.table('groups').select("group_name", "description", "members").eq('id', group_id).execute()
-    expenses, count = main.supabase.table('expenses').select("*").eq('group_id', group_id).execute()
-    response = { "id": group_id, "name": data[1][0]["group_name"], "description": data[1][0]["description"], "members": [], "expenses": expenses[1]}
-    for member in data[1][0]["members"]:
-        group_member, _count = main.supabase.table('groupMembers').select('*').eq('user_id', member).eq('group_id', group_id).execute()
-        response["members"].append({"groupMemberId": group_member[1][0]['id'], "userId": group_member[1][0]["user_id"], "groupId": group_member[1][0]["group_id"], "username": group_member[1][0]["username"], "currentBalance": group_member[1][0]["current_balance"]})
-    return response
-
+   return helpers.get_group_data(group_id)
+    
 @groups.route("/invite", methods=['POST'])
 # @cross_origin
 def create_invitation_link():
@@ -63,9 +57,8 @@ def accept_invitation():
     user_id = request.get_json().get('userId', '')
     username = request.get_json().get('username', '')
     current_groups = request.get_json().get('currentGroups', [])
-    # current_groups, count = supabase.table('users').select('groups').eq('id', user_id).execute()
-    group_member, count = main.supabase.table('groupMembers').insert({"user_id": user_id, "group_id": group_id, "current_balance": 0.0, "username": username}).execute()
-    current_groups.append(group_id)
-    result, count = main.supabase.table('users').update({"groups": current_groups}).eq('id', user_id).execute()
-    # result, count = supabase.table('groups').update({"members": current_groups}).eq('id', group_id).execute()
+    
+    groups = list(map(lambda group: group['id'], current_groups))
+    helpers.add_user_to_group(user_id, group_id, username, groups)
+    
     return {"message": "Invitation accepted"}
