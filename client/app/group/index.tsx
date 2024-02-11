@@ -6,6 +6,8 @@ import {
   useColorScheme,
   Pressable,
   ScrollView,
+  Text,
+  View,
 } from "react-native";
 import Colors from "../../constants/Colors";
 import { Stack, useLocalSearchParams } from "expo-router";
@@ -13,6 +15,7 @@ import { Expense } from "../../components/Expense";
 import { AddExpenseButton } from "../../components/AddExpenseButton";
 import { Loading } from "../../components/Loading";
 import type { Group } from "../lib/types";
+import { basestyles } from "../lib/staticStyles";
 
 export default function GroupPage() {
   const { name, gid } = useLocalSearchParams();
@@ -98,10 +101,15 @@ export default function GroupPage() {
           ),
         }}
       />
-
       <ScrollView>
         {isLoading ? (
           <Loading />
+        ) : data?.expenses.length == 0 ? (
+          <View style={basestyles.container}>
+            <Text style={basestyles.title}>
+              No expenses yet...
+            </Text>
+          </View>
         ) : (
           data?.expenses?.map((expense) => (
             <Expense {...expense} key={expense.id} />

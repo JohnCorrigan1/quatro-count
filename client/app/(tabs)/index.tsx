@@ -20,7 +20,6 @@ export default function TabOneScreen() {
       `http://127.0.0.1:5000/api/users/${user?.id}`
     );
     if (response.ok) {
-      // console.log(response.json());
       return response.json();
     } else {
       console.log("not ok");

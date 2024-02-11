@@ -4,7 +4,7 @@ import Colors from "../constants/Colors";
 import { FontAwesome } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import GroupPage from "../app/group";
-import GroupSettingsPage from "../app/settings";
+import GroupSettingsPage from "../app/group/settings";
 
 export default function GroupLayout() {
   //   const colorScheme = useColorScheme();
