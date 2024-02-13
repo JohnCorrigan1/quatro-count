@@ -5,8 +5,15 @@ import {
   View,
 } from "react-native";
 import Colors from "../constants/Colors";
+import { useQueryClient } from "@tanstack/react-query";
+import { Link } from "expo-router";
 export const Expense = (expense: any) => {
+  console.log("expense", expense);
   const colorScheme = useColorScheme();
+  const queryClient = useQueryClient();
+  const groupParams = queryClient.getQueryData([
+    "groupParamas",
+  ]);
 
   const styles = StyleSheet.create({
     expense: {
@@ -27,12 +34,23 @@ export const Expense = (expense: any) => {
   });
 
   return (
-    <View style={styles.expense}>
-      <Text style={styles.column}>{expense.title}</Text>
-      <Text style={styles.column}>${expense.amount}</Text>
-      <Text style={styles.column}>
-        {new Date(expense.created_at).toLocaleDateString()}
-      </Text>
-    </View>
+    <Link
+      href={{
+        pathname: "/group/expense",
+        params: {
+          id: expense.id,
+        },
+      }}
+      asChild>
+      <View style={styles.expense}>
+        <Text style={styles.column}>{expense.title}</Text>
+        <Text style={styles.column}>${expense.amount}</Text>
+        <Text style={styles.column}>
+          {new Date(
+            expense.created_at
+          ).toLocaleDateString()}
+        </Text>
+      </View>
+    </Link>
   );
 };

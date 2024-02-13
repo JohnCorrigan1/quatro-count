@@ -1,4 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
+import {
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useRouter, Link } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
 import {
@@ -16,9 +19,12 @@ import { AddExpenseButton } from "../../components/AddExpenseButton";
 import { Loading } from "../../components/Loading";
 import type { Group } from "../lib/types";
 import { basestyles } from "../lib/staticStyles";
+import { useEffect } from "react";
 
 export default function GroupPage() {
   const { name, gid } = useLocalSearchParams();
+  const queryClient = useQueryClient();
+
   const router = useRouter();
 
   const getGroupData = async (): Promise<Group> => {
@@ -31,6 +37,15 @@ export default function GroupPage() {
     queryKey: ["groupData"],
     queryFn: getGroupData,
   });
+
+  useEffect(() => {
+    if (data) {
+      queryClient.setQueryData(
+        ["groupExpenses"],
+        data.expenses
+      );
+    }
+  }, [data]);
 
   const colorScheme = useColorScheme();
 
