@@ -55,7 +55,7 @@ export default function Expense() {
 
   return (
     <>
-      <Stack.Screen />
+      {/* <Stack.Screen /> */}
       <View style={basestyles.container}>
         <Text style={basestyles.title}>Expense</Text>
         <Text style={basestyles.title}>{id}</Text>
