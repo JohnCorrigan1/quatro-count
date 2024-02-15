@@ -29,7 +29,7 @@ export const AddExpenseButton = () => {
   return (
     <Link
       style={styles.addGroup}
-      href="/addexpense"
+      href="/group/addexpense"
       asChild>
       <Pressable>
         {({ pressed }) => (

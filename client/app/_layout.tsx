@@ -95,14 +95,15 @@ function RootLayoutNav() {
                 name="newgroup"
                 options={{ presentation: "modal" }}
               />
-              <Stack.Screen
+              {/* <Stack.Screen
                 name="addexpense"
                 options={{ presentation: "modal" }}
-              />
+              /> */}
               <Stack.Screen name="invite" />
               <Stack.Screen
                 name="group"
                 options={{
+                  headerShown: false,
                   headerTitle: "Grouper",
                   headerBackTitle: "Groups",
                 }}

@@ -1,7 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { Platform } from "react-native";
-import { View } from "../components/Themed";
-import { ExpenseForm } from "../components/ExpenseForm";
+import { View } from "../../components/Themed";
+import { ExpenseForm } from "../../components/ExpenseForm";
 
 export default function ModalScreen() {
   return (

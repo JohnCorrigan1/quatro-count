@@ -74,7 +74,7 @@ export default function GroupPage() {
           ),
         }}
       />*/}
-      {/* <Stack.Screen options={{ headerShown: false }} /> */}
+      <Stack.Screen options={{ headerShown: false }} />
       <ScrollView>
         {isLoading ? (
           <Loading />
