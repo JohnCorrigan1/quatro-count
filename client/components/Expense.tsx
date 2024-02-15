@@ -5,8 +5,20 @@ import {
   View,
 } from "react-native";
 import Colors from "../constants/Colors";
+import { useQueryClient } from "@tanstack/react-query";
+import { Link, useLocalSearchParams } from "expo-router";
+import { Pressable } from "react-native";
+import { useRouter } from "expo-router";
 export const Expense = (expense: any) => {
+  const { gid, name } = useLocalSearchParams();
+  console.log("expense", expense);
   const colorScheme = useColorScheme();
+  const queryClient = useQueryClient();
+  const groupParams: any = queryClient.getQueryData([
+    "groupParamas",
+  ]);
+
+  console.log("groupParamseee", groupParams);
 
   const styles = StyleSheet.create({
     expense: {
@@ -25,14 +37,31 @@ export const Expense = (expense: any) => {
       color: Colors[colorScheme ?? "light"].text,
     },
   });
+  const router = useRouter();
+  const navigateToExpense = () => {
+    router.push({
+      pathname: "/group/expense",
+      params: {
+        eid: expense.id,
+        name,
+        gid,
+        // name: groupParams?.name,
+        // gid: groupParams?.gid,
+      },
+    });
+  };
 
   return (
-    <View style={styles.expense}>
-      <Text style={styles.column}>{expense.title}</Text>
-      <Text style={styles.column}>${expense.amount}</Text>
-      <Text style={styles.column}>
-        {new Date(expense.created_at).toLocaleDateString()}
-      </Text>
-    </View>
+    <Pressable onPress={navigateToExpense}>
+      <View style={styles.expense}>
+        <Text style={styles.column}>{expense.title}</Text>
+        <Text style={styles.column}>${expense.amount}</Text>
+        <Text style={styles.column}>
+          {new Date(
+            expense.created_at
+          ).toLocaleDateString()}
+        </Text>
+      </View>
+    </Pressable>
   );
 };

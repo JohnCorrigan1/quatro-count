@@ -7,10 +7,9 @@ import {
   Share,
   Platform,
 } from "react-native";
-import { basestyles } from "../lib/staticStyles";
+import { basestyles } from "../../lib/staticStyles";
 import { Button } from "react-native-elements";
 import { useUser } from "@clerk/clerk-expo";
-import { useQuery } from "@tanstack/react-query";
 
 export default function GroupSettingsPage() {
   const [inviteLink, setInviteLink] = useState("");
@@ -38,19 +37,17 @@ export default function GroupSettingsPage() {
 
   const shareInviteLink = async () => {
     await getInviteLink();
-    // await Share.share({
-    //   message: `Join my group on focount bitch`,
-    //   url: inviteLink,
-    // });
+    if (Platform.OS !== "web") {
+      await Share.share({
+        message: `Join my group on focount bitch`,
+        url: inviteLink,
+      });
+    }
   };
 
   return (
     <>
-      <Stack.Screen
-        options={{
-          title: "settings",
-        }}
-      />
+      <Stack.Screen options={{ headerShown: false }} />
       <View style={basestyles.container}>
         <Text style={basestyles.title}>Group Settings</Text>
         <Text style={basestyles.title}>{gid}</Text>

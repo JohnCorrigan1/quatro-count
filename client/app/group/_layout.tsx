@@ -1,66 +1,56 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Tabs, useNavigation } from "expo-router";
-import { useColorScheme } from "react-native";
-import Colors from "../../constants/Colors";
 import { useQueryClient } from "@tanstack/react-query";
+import { Stack, router, useRouter } from "expo-router";
+import { Platform, Pressable, Text } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
+import { useEffect, useState } from "react";
 
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>["name"];
-  color: string;
-}) {
-  return (
-    <FontAwesome
-      size={28}
-      style={{ marginBottom: -3 }}
-      {...props}
-    />
-  );
-}
-
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-  const groupParams = useQueryClient().getQueryData([
-    "groupParams",
+export default function GroupLayout() {
+  const groupData: any = useQueryClient().getQueryData([
+    "groupData",
   ]);
+  const [options, setOptions] = useState<any>({
+    title: groupData?.name ?? "Group",
+  });
 
-  const parentLayout = useNavigation("");
+  const ios = Platform.OS === "ios";
+
+  useEffect(() => {
+    if (ios) {
+      setOptions({
+        headerLeft: () => <Back />,
+        title: groupData?.name ?? "Group",
+      });
+    }
+  }, [Platform.OS]);
 
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor:
-          Colors[colorScheme ?? "light"].tint,
-      }}>
-      <Tabs.Screen
-        name="index"
-        initialParams={groupParams ?? {}}
+    <Stack>
+      <Stack.Screen name="(group)" options={options} />
+      <Stack.Screen
+        name="addexpense"
         options={{
-          title: "Expenses",
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="dollar" color={color} />
-          ),
+          presentation: "modal",
+          title: "Add Expense",
         }}
       />
-      <Tabs.Screen
-        name="balances"
-        initialParams={groupParams ?? {}}
-        options={{
-          title: "Balances",
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="money" color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="settings"
-        initialParams={groupParams ?? {}}
-        options={{
-          title: "Settings",
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="cog" color={color} />
-          ),
-        }}
-      />
-    </Tabs>
+    </Stack>
   );
 }
+
+const Back = () => {
+  const isIos = Platform.OS === "ios";
+  if (isIos) {
+    return (
+      <Pressable>
+        <FontAwesome
+          name="chevron-left"
+          size={20}
+          color="white"
+          onPress={() => {
+            router.back();
+          }}
+        />
+      </Pressable>
+    );
+  }
+};

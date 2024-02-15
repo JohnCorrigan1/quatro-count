@@ -62,3 +62,4 @@ def accept_invitation():
     helpers.add_user_to_group(user_id, group_id, username, groups)
     
     return {"message": "Invitation accepted"}
+

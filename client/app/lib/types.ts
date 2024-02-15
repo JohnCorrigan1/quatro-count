@@ -24,8 +24,8 @@ export type Expense = {
   amount: number;
   name: string;
   description: string;
-  paidBy: number;
-  paidFor: number[];
+  paid_by: number;
+  paid_for: number[];
   createdAt: string;
 };
 

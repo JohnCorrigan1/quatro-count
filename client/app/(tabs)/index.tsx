@@ -13,14 +13,9 @@ export default function TabOneScreen() {
   const [groups, setGroups] = useState<any>([]);
   const router = useRouter();
 
-  const getCurrentUser = async (): Promise<
-    CurrentUser | undefined
-  > => {
-    const response = await fetch(
-      `http://127.0.0.1:5000/api/users/${user?.id}`
-    );
+  const getCurrentUser = async (): Promise<CurrentUser | undefined> => {
+    const response = await fetch(`http://127.0.0.1:5000/api/users/${user?.id}`);
     if (response.ok) {
-      // console.log(response.json());
       return response.json();
     } else {
       console.log("not ok");
@@ -48,9 +43,7 @@ export default function TabOneScreen() {
   return (
     <View style={basestyles.container}>
       {data?.groups.length === 0 ? (
-        <Text style={basestyles.title}>
-          You have no friends...
-        </Text>
+        <Text style={basestyles.title}>You have no friends...</Text>
       ) : (
         <GroupContainer groups={groups} />
       )}
