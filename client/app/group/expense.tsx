@@ -1,8 +1,8 @@
-import { basestyles } from "../../lib/staticStyles";
+import { basestyles } from "../lib/staticStyles";
 import { View, Text } from "react-native";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import type { Group } from "../../lib/types";
+import type { Group } from "../lib/types";
 import {
   Stack,
   useLocalSearchParams,
@@ -11,9 +11,8 @@ import {
 import { useEffect } from "react";
 
 export default function Expense() {
-  const { id } = useLocalSearchParams();
+  const { eid } = useLocalSearchParams();
   const queryClient = useQueryClient();
-  const parentLayout = useNavigation("/group");
   const [expenseData, setExpenseData] = useState({});
 
   // const expense: any = queryClient.getQueryData([
@@ -27,7 +26,7 @@ export default function Expense() {
     if (!groupData) return;
 
     const expense = groupData.expenses.find(
-      (expense: any) => expense.id === id
+      (expense: any) => expense.id === eid
     );
     console.log("expense", expense);
 
@@ -55,10 +54,15 @@ export default function Expense() {
 
   return (
     <>
-      {/* <Stack.Screen /> */}
+      <Stack.Screen
+        options={{
+          title: "Expense",
+          headerBackTitle: "Expenses",
+        }}
+      />
       <View style={basestyles.container}>
         <Text style={basestyles.title}>Expense</Text>
-        <Text style={basestyles.title}>{id}</Text>
+        <Text style={basestyles.title}>{eid}</Text>
       </View>
     </>
   );

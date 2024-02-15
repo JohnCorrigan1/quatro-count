@@ -1,4 +1,7 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useRouter, Link } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
 import {
@@ -9,13 +12,13 @@ import {
   Text,
   View,
 } from "react-native";
-import Colors from "../../constants/Colors";
+import Colors from "../../../constants/Colors";
 import { Stack, useLocalSearchParams } from "expo-router";
-import { Expense } from "../../components/Expense";
-import { AddExpenseButton } from "../../components/AddExpenseButton";
-import { Loading } from "../../components/Loading";
-import type { Group } from "../lib/types";
-import { basestyles } from "../lib/staticStyles";
+import { Expense } from "../../../components/Expense";
+import { AddExpenseButton } from "../../../components/AddExpenseButton";
+import { Loading } from "../../../components/Loading";
+import type { Group } from "../../lib/types";
+import { basestyles } from "../../lib/staticStyles";
 import { useEffect } from "react";
 
 export default function GroupPage() {
@@ -25,9 +28,9 @@ export default function GroupPage() {
   const router = useRouter();
 
   const getGroupData = async (): Promise<Group> => {
-    return await fetch(`http://127.0.0.1:5000/api/groups/${gid}`).then((res) =>
-      res.json(),
-    );
+    return await fetch(
+      `http://127.0.0.1:5000/api/groups/${gid}`
+    ).then((res) => res.json());
   };
 
   const { isLoading, isError, data } = useQuery({
@@ -37,7 +40,10 @@ export default function GroupPage() {
 
   useEffect(() => {
     if (data) {
-      queryClient.setQueryData(["groupExpenses"], data.expenses);
+      queryClient.setQueryData(
+        ["groupExpenses"],
+        data.expenses
+      );
     }
   }, [data]);
 
@@ -45,7 +51,7 @@ export default function GroupPage() {
 
   return (
     <>
-      <Stack.Screen
+      {/* <Stack.Screen
         options={{
           headerBackTitle: "Groups",
           headerBackButtonMenuEnabled: false,
@@ -67,13 +73,16 @@ export default function GroupPage() {
             </Pressable>
           ),
         }}
-      />
+      />*/}
+      {/* <Stack.Screen options={{ headerShown: false }} /> */}
       <ScrollView>
         {isLoading ? (
           <Loading />
         ) : data?.expenses.length == 0 ? (
           <View style={basestyles.container}>
-            <Text style={basestyles.title}>No expenses yet...</Text>
+            <Text style={basestyles.title}>
+              No expenses yet...
+            </Text>
           </View>
         ) : (
           data?.expenses?.map((expense) => (

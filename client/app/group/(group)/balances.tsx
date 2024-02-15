@@ -1,5 +1,5 @@
 import { View, Text } from "react-native";
-import { basestyles } from "../lib/staticStyles";
+import { basestyles } from "../../lib/staticStyles";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 

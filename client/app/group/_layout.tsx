@@ -1,66 +1,27 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Stack, Tabs, useNavigation } from "expo-router";
-import { useColorScheme } from "react-native";
-import Colors from "../../constants/Colors";
 import { useQueryClient } from "@tanstack/react-query";
+import { Stack } from "expo-router";
 
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>["name"];
-  color: string;
-}) {
-  return (
-    <FontAwesome
-      size={28}
-      style={{ marginBottom: -3 }}
-      {...props}
-    />
-  );
-}
-
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-  const groupParams = useQueryClient().getQueryData([
-    "groupParams",
+export default function GroupLayout() {
+  const groupData: any = useQueryClient().getQueryData([
+    "groupData",
   ]);
 
-  const parentLayout = useNavigation("");
-
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor:
-          Colors[colorScheme ?? "light"].tint,
-      }}>
-      <Tabs.Screen
-        name="index"
-        initialParams={groupParams ?? {}}
+    <Stack>
+      <Stack.Screen
+        name="(group)"
         options={{
-          title: "Expenses",
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="dollar" color={color} />
-          ),
+          headerBackTitleVisible: true,
+          headerBackTitle: "Groups",
+          //   headerBackTitleVisible: true,
+          title: groupData?.name ?? "Group",
+          //   headerBackTitle: "Groups",
         }}
       />
-      <Tabs.Screen
-        name="balances"
-        initialParams={groupParams ?? {}}
-        options={{
-          title: "Balances",
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="money" color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="settings"
-        initialParams={groupParams ?? {}}
-        options={{
-          title: "Settings",
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="cog" color={color} />
-          ),
-        }}
-      />
-    </Tabs>
+      {/* <Stack.Screen
+        name="expense"
+        options={{ headerShown: false }}
+      /> */}
+    </Stack>
   );
 }

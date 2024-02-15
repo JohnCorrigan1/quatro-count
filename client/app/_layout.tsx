@@ -6,10 +6,18 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { SplashScreen, Stack } from "expo-router";
+import {
+  SplashScreen,
+  Stack,
+  useNavigation,
+  useRouter,
+} from "expo-router";
 import { useEffect } from "react";
 import { useColorScheme } from "react-native";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 import ClerkProvider from "./ClerkProvider";
 
 const queryClient = new QueryClient();
@@ -57,20 +65,32 @@ const publishableKey =
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
-  console.log(process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY);
+  console.log(
+    process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY
+  );
 
+  const router = useRouter();
   return (
     <ClerkProvider>
       <QueryClientProvider client={queryClient}>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <ThemeProvider
-            value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-          >
+            value={
+              colorScheme === "dark"
+                ? DarkTheme
+                : DefaultTheme
+            }>
             <Stack>
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen
+                name="(tabs)"
+                options={{ headerShown: false }}
+              />
               <Stack.Screen name="login" />
               <Stack.Screen name="createaccount" />
-              <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+              <Stack.Screen
+                name="modal"
+                options={{ presentation: "modal" }}
+              />
               <Stack.Screen
                 name="newgroup"
                 options={{ presentation: "modal" }}
@@ -79,14 +99,15 @@ function RootLayoutNav() {
                 name="addexpense"
                 options={{ presentation: "modal" }}
               />
+              <Stack.Screen name="invite" />
               <Stack.Screen
                 name="group"
-                // options={{ title: router.params?.name }}
-                options={{ headerShown: false }}
+                options={{
+                  headerTitle: "Grouper",
+                  headerBackTitle: "Groups",
+                }}
               />
-              <Stack.Screen name="expense" />
               {/* <Stack.Screen name="expense" /> */}
-              <Stack.Screen name="invite" />
             </Stack>
           </ThemeProvider>
         </GestureHandlerRootView>
