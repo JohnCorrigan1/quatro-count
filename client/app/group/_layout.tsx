@@ -47,7 +47,7 @@ const Back = () => {
           size={20}
           color="white"
           onPress={() => {
-            router.replace("/");
+            router.navigate("/");
           }}
         />
       </Pressable>
