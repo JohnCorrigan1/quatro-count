@@ -59,17 +59,9 @@ export default function RootLayout() {
   return <RootLayoutNav />;
 }
 
-const publishableKey =
-  "pk_test_ZGVjZW50LXNsb3RoLTE1LmNsZXJrLmFjY291bnRzLmRldiQ";
-
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
-  console.log(
-    process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY
-  );
-
-  const router = useRouter();
   return (
     <ClerkProvider>
       <QueryClientProvider client={queryClient}>
@@ -95,10 +87,6 @@ function RootLayoutNav() {
                 name="newgroup"
                 options={{ presentation: "modal" }}
               />
-              {/* <Stack.Screen
-                name="addexpense"
-                options={{ presentation: "modal" }}
-              /> */}
               <Stack.Screen name="invite" />
               <Stack.Screen
                 name="group"
@@ -108,7 +96,6 @@ function RootLayoutNav() {
                   headerBackTitle: "Groups",
                 }}
               />
-              {/* <Stack.Screen name="expense" /> */}
             </Stack>
           </ThemeProvider>
         </GestureHandlerRootView>

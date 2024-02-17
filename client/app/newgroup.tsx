@@ -1,5 +1,5 @@
-import type { CurrentUser } from "./lib/types";
-import { formStyles } from "./lib/staticStyles";
+import type { CurrentUser } from "@lib/types";
+import { formStyles } from "@lib/staticStyles";
 import { StatusBar } from "expo-status-bar";
 import { Platform } from "react-native";
 import {
@@ -7,10 +7,11 @@ import {
   useMutation,
 } from "@tanstack/react-query";
 import { useState } from "react";
-import { Text, View } from "../components/Themed";
+import { Text, View } from "@components/Themed";
 import { TextInput } from "react-native-gesture-handler";
 import { useRouter } from "expo-router";
 import { Button } from "react-native-elements";
+import { apiUrl } from "@lib/api";
 
 export default function ModalScreen() {
   return (
@@ -36,7 +37,7 @@ const GroupForm = () => {
       await queryClient.getQueryData(["currentUser"]);
     console.log("before post group", currentUser);
 
-    return await fetch("http://127.0.0.1:5000/api/groups", {
+    return await fetch(`${apiUrl}groups`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

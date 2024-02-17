@@ -1,20 +1,25 @@
-import type { CurrentUser } from "../lib/types";
-import { basestyles } from "../lib/staticStyles";
-import { GroupContainer } from "../../components/GroupContainer";
-import { View, Text } from "../../components/Themed";
+import type { CurrentUser } from "@lib/types";
+import { basestyles } from "@lib/staticStyles";
+import { GroupContainer } from "@components/GroupContainer";
+import { View, Text } from "@components/Themed";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { AddGroupButton } from "../../components/AddGroupButton";
+import { AddGroupButton } from "@components/AddGroupButton";
 import { Redirect, useRouter } from "expo-router";
 import { useUser } from "@clerk/clerk-expo";
+import { apiUrl } from "@lib/api";
 
 export default function TabOneScreen() {
   const { isLoaded, isSignedIn, user } = useUser();
   const [groups, setGroups] = useState<any>([]);
   const router = useRouter();
 
-  const getCurrentUser = async (): Promise<CurrentUser | undefined> => {
-    const response = await fetch(`http://127.0.0.1:5000/api/users/${user?.id}`);
+  const getCurrentUser = async (): Promise<
+    CurrentUser | undefined
+  > => {
+    const response = await fetch(
+      `${apiUrl}users/${user?.id}`
+    );
     if (response.ok) {
       return response.json();
     } else {
@@ -43,7 +48,9 @@ export default function TabOneScreen() {
   return (
     <View style={basestyles.container}>
       {data?.groups.length === 0 ? (
-        <Text style={basestyles.title}>You have no friends...</Text>
+        <Text style={basestyles.title}>
+          You have no friends...
+        </Text>
       ) : (
         <GroupContainer groups={groups} />
       )}

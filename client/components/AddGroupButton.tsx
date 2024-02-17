@@ -5,7 +5,7 @@ import {
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { Link } from "expo-router";
-import Colors from "../constants/Colors";
+import Colors from "@constants/Colors";
 
 export const AddGroupButton = () => {
   const colorScheme = useColorScheme();

@@ -1,7 +1,7 @@
 import { View, Text, Pressable } from "react-native";
-import { formStyles } from "../app/lib/staticStyles";
+import { formStyles } from "@lib/staticStyles";
 import Checkbox from "expo-checkbox";
-import { PaidFor } from "../app/lib/types";
+import { PaidFor } from "@lib/types";
 import { useEffect, useState } from "react";
 
 type CheckboxGroupProps = {
@@ -41,7 +41,6 @@ export const CheckboxGroup = (
       {props.paidFor?.map((member) => (
         <Pressable
           key={member.groupMemberId}
-          // style={formStyles.checkbox}
           onPress={() =>
             updatePaidFor(member.groupMemberId)
           }>

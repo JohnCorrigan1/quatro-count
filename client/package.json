@@ -2,6 +2,7 @@
   "name": "quatro",
   "main": "expo-router/entry",
   "version": "1.0.0",
+  "proxy": "http://52.53.253.127/api/",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",

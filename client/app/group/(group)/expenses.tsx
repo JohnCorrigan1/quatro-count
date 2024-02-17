@@ -3,22 +3,19 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { useRouter, Link } from "expo-router";
-import { FontAwesome } from "@expo/vector-icons";
 import {
-  StyleSheet,
   useColorScheme,
-  Pressable,
   ScrollView,
   Text,
   View,
 } from "react-native";
-import Colors from "../../../constants/Colors";
 import { Stack, useLocalSearchParams } from "expo-router";
-import { Expense } from "../../../components/Expense";
-import { AddExpenseButton } from "../../../components/AddExpenseButton";
-import { Loading } from "../../../components/Loading";
-import type { Group } from "../../lib/types";
-import { basestyles } from "../../lib/staticStyles";
+import { Expense } from "@components/Expense";
+import { AddExpenseButton } from "@components/AddExpenseButton";
+import { Loading } from "@components/Loading";
+import type { Group } from "@lib/types";
+import { basestyles } from "@lib/staticStyles";
+import { apiUrl } from "@lib/api";
 import { useEffect } from "react";
 
 export default function GroupPage() {
@@ -28,9 +25,9 @@ export default function GroupPage() {
   const router = useRouter();
 
   const getGroupData = async (): Promise<Group> => {
-    return await fetch(
-      `http://127.0.0.1:5000/api/groups/${gid}`
-    ).then((res) => res.json());
+    return await fetch(`${apiUrl}groups/${gid}`).then(
+      (res) => res.json()
+    );
   };
 
   const { isLoading, isError, data } = useQuery({

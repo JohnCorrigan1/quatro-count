@@ -4,7 +4,7 @@ import {
   StyleSheet,
   useColorScheme,
 } from "react-native";
-import Colors from "../constants/Colors";
+import Colors from "@constants/Colors";
 export const Loading = () => {
   const colorScheme = useColorScheme();
   const styles = StyleSheet.create({

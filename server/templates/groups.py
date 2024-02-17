@@ -1,7 +1,7 @@
 from flask import request, Blueprint
 from flask_cors import cross_origin
 import uuid
-import main
+import app
 import helpers
 
 groups = Blueprint('groups', __name__, url_prefix='/api/groups', template_folder='templates')
@@ -35,11 +35,11 @@ def create_invitation_link():
     print(clerk_id, group_id)
     base_url = "http://localhost:8081/invite?code="
     invitation_link = base_url + str(uuid.uuid4())
-    user_id, _count = main.supabase.table('users').select('id', 'groups').eq('clerk_id', clerk_id).execute()
+    user_id, _count = app.supabase.table('users').select('id', 'groups').eq('clerk_id', clerk_id).execute()
     invitee_in_group = int(group_id) in user_id[1][0]['groups'] 
     if invitee_in_group == False:
         return {"message": "You are not a member of this group"}
-    result, count = main.supabase.table('groupInvitations').insert({"group_id": group_id, "invitation_link": invitation_link, "invited_by_id": user_id[1][0]['id']}).execute()
+    result, count = app.supabase.table('groupInvitations').insert({"group_id": group_id, "invitation_link": invitation_link, "invited_by_id": user_id[1][0]['id']}).execute()
     print("made it here")
     return {"message": "Invitation link created", "link": invitation_link}
 
@@ -47,7 +47,7 @@ def create_invitation_link():
 @cross_origin()
 def get_invitation_data(invitation_link):
     full_link = "http://localhost:8081/invite?code=" + invitation_link
-    data, count = main.supabase.table('groupInvitations').select('*').eq('invitation_link', full_link).execute()
+    data, count = app.supabase.table('groupInvitations').select('*').eq('invitation_link', full_link).execute()
     return {"group_id": data[1][0]['group_id'], "invited_by_id": data[1][0]['invited_by_id']}
 
 @groups.route("/invite/accept", methods=['POST'])

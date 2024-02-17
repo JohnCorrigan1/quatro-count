@@ -5,10 +5,10 @@ import {
   useColorScheme,
   ScrollView,
 } from "react-native";
-import { Link, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { Pressable } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import Colors from "../constants/Colors";
+import Colors from "@constants/Colors";
 import { useQueryClient } from "@tanstack/react-query";
 
 export const GroupContainer = (props: any) => {

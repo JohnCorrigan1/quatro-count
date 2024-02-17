@@ -4,18 +4,19 @@ import {
   useQueryClient,
   useMutation,
 } from "@tanstack/react-query";
-import { formStyles } from "../app/lib/staticStyles";
+import { formStyles } from "@lib/staticStyles";
 import { View, Text } from "react-native";
 import {
   type PaidByMap,
   type PaidFor,
   type Group,
   type CurrentUser,
-} from "../app/lib/types";
-import { CheckboxGroup } from "../components/CheckboxGroup";
-import { FormDropdown } from "../components/FormDropdown";
+} from "@lib/types";
+import { CheckboxGroup } from "@components/CheckboxGroup";
+import { FormDropdown } from "@components/FormDropdown";
 import { Button } from "react-native-elements";
 import { TxtInput } from "./TxtInput";
+import { apiUrl } from "@app/lib/api";
 
 export const ExpenseForm = () => {
   const queryClient = useQueryClient();
@@ -45,26 +46,23 @@ export const ExpenseForm = () => {
   const [category, setCategory] = useState("Groceries");
 
   const postExpense = async () => {
-    return await fetch(
-      "http://127.0.0.1:5000/api/expenses",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title,
-          amount,
-          description,
-          category,
-          paidBy,
-          paidFor: paidFor
-            ?.filter((member) => member.included)
-            .map((member) => member.groupMemberId),
-          groupId: groupData?.id,
-        }),
-      }
-    ).then((res) => res.json());
+    return await fetch(`${apiUrl}expenses`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title,
+        amount,
+        description,
+        category,
+        paidBy,
+        paidFor: paidFor
+          ?.filter((member) => member.included)
+          .map((member) => member.groupMemberId),
+        groupId: groupData?.id,
+      }),
+    }).then((res) => res.json());
   };
 
   const mutation = useMutation({
