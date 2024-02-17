@@ -1,6 +1,6 @@
-import { View } from "../../components/Themed";
-import { basestyles } from "../lib/staticStyles";
-import { AccountPage } from "../../components/AccountPage";
+import { View } from "@components/Themed";
+import { basestyles } from "@lib/staticStyles";
+import { AccountPage } from "@components/AccountPage";
 
 export default function AccountScreen() {
   return (

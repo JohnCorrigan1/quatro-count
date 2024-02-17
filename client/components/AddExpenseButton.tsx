@@ -5,7 +5,7 @@ import {
   StyleSheet,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import Colors from "../constants/Colors";
+import Colors from "@constants/Colors";
 
 export const AddExpenseButton = () => {
   const colorScheme = useColorScheme();

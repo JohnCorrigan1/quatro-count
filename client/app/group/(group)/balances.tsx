@@ -1,9 +1,6 @@
 import { View, Text } from "react-native";
-import {
-  basestyles,
-  formStyles,
-} from "../../lib/staticStyles";
-import type { Group } from "../../lib/types";
+import { basestyles, formStyles } from "@lib/staticStyles";
+import type { Group } from "@lib/types";
 import { useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 import { Stack } from "expo-router";

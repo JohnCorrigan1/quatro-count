@@ -5,19 +5,14 @@ import {
 } from "expo-router";
 import { useUser } from "@clerk/clerk-expo";
 import { View, Text } from "react-native";
-import { basestyles } from "./lib/staticStyles";
-import type { CurrentUser } from "./lib/types";
+import { basestyles } from "@lib/staticStyles";
+import type { CurrentUser } from "@lib/types";
 import {
-  QueryClient,
   useQueryClient,
   useQuery,
 } from "@tanstack/react-query";
 import { Button } from "react-native-elements";
-
-// type Invite = {
-//   group_id: number;
-//   invited_by_id: number;
-// };
+import { apiUrl } from "@lib/api";
 
 export default function InvitePage() {
   const { code } = useLocalSearchParams();
@@ -27,7 +22,7 @@ export default function InvitePage() {
 
   const getInviteData = async () => {
     const data = await fetch(
-      `http://127.0.0.1:5000/api/groups/invite/${code}`
+      `${apiUrl}groups/invite/${code}`
     ).then((res) => res.json());
     setInviteData(data);
   };
@@ -36,18 +31,15 @@ export default function InvitePage() {
     getInviteData();
   }, []);
 
-  const queryClient = useQueryClient();
   const getCurrentUser = async (): Promise<
     CurrentUser | undefined
   > => {
     const response = await fetch(
-      `http://127.0.0.1:5000/api/users/${user?.id}`
+      `${apiUrl}users/${user?.id}`
     );
     if (response.ok) {
-      // console.log(response.json());
       return response.json();
     } else {
-      console.log("not ok");
       router.push("/createaccount");
     }
   };
@@ -61,34 +53,19 @@ export default function InvitePage() {
 
   const acceptInvite = async () => {
     if (!data) return;
-    await fetch(
-      "http://127.0.0.1:5000/api/groups/invite/accept",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: data?.id,
-          groupId: inviteData?.group_id,
-          username: data?.username,
-          currentGroups: data?.groups,
-        }),
-      }
-    );
+    await fetch(`${apiUrl}groups/invite/accept`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: data?.id,
+        groupId: inviteData?.group_id,
+        username: data?.username,
+        currentGroups: data?.groups,
+      }),
+    });
   };
-
-  useEffect(() => {
-    console.log("currentUser", data);
-  }, [data]);
-
-  // useEffect(() => {
-  // if (!code) return;
-  // console.log("code", code);
-  // console.log("invite", getInviteData());
-  // setInviteData(getInviteData());
-  // console.log("inviteData", inviteData);
-  // }, [code, inviteData]);
 
   return (
     <View style={basestyles.container}>

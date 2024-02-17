@@ -7,9 +7,10 @@ import {
   Share,
   Platform,
 } from "react-native";
-import { basestyles } from "../../lib/staticStyles";
+import { basestyles } from "@lib/staticStyles";
 import { Button } from "react-native-elements";
 import { useUser } from "@clerk/clerk-expo";
+import { apiUrl } from "@lib/api";
 
 export default function GroupSettingsPage() {
   const [inviteLink, setInviteLink] = useState("");
@@ -18,19 +19,16 @@ export default function GroupSettingsPage() {
   const colorScheme = useColorScheme();
 
   const getInviteLink = async () => {
-    const link = await fetch(
-      "http://127.0.0.1:5000/api/groups/invite",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          clerk_id: user?.id,
-          groupId: gid,
-        }),
-      }
-    );
+    const link = await fetch(`${apiUrl}groups/invite`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        clerk_id: user?.id,
+        groupId: gid,
+      }),
+    });
     const data = await link.json();
     setInviteLink(data.link);
   };

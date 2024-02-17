@@ -4,7 +4,7 @@ import {
   Text,
   View,
 } from "react-native";
-import Colors from "../constants/Colors";
+import Colors from "@constants/Colors";
 import { useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 import { Pressable } from "react-native";

@@ -1,5 +1,5 @@
-# from main import app, supabase
-import main
+# from app import app, supabase
+import app
 from flask_cors import cross_origin
 from flask import request, Blueprint
 import helpers

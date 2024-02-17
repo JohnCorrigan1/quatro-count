@@ -1,5 +1,4 @@
 import { useColorScheme, StyleSheet } from "react-native";
-import { color } from "react-native-elements/dist/helpers";
 import { TextInput } from "react-native-gesture-handler";
 type TxtInputProps = {
   placeholder?: string;
