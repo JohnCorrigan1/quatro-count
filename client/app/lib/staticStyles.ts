@@ -9,15 +9,25 @@ export const formStyles = StyleSheet.create({
   checkboxGroup: {
     display: "flex",
     flexDirection: "column",
+    width: "100%",
   },
   checkbox: {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    padding: 10,
-    borderWidth: 1,
+    justifyContent: "space-between",
+    padding: 24,
+    // borderWidth: 1,
+    // borderColor: "white",
+    borderBottomColor: "white",
+    borderBottomWidth: 1,
+    width: "100%",
   },
-
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   separator: {
     marginVertical: 30,
     height: 1,

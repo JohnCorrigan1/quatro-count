@@ -6,19 +6,14 @@ import {
 } from "react-native";
 import Colors from "../constants/Colors";
 import { useQueryClient } from "@tanstack/react-query";
-import { Link, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { Pressable } from "react-native";
 import { useRouter } from "expo-router";
+
 export const Expense = (expense: any) => {
   const { gid, name } = useLocalSearchParams();
-  console.log("expense", expense);
   const colorScheme = useColorScheme();
   const queryClient = useQueryClient();
-  const groupParams: any = queryClient.getQueryData([
-    "groupParamas",
-  ]);
-
-  console.log("groupParamseee", groupParams);
 
   const styles = StyleSheet.create({
     expense: {
@@ -45,8 +40,6 @@ export const Expense = (expense: any) => {
         eid: expense.id,
         name,
         gid,
-        // name: groupParams?.name,
-        // gid: groupParams?.gid,
       },
     });
   };

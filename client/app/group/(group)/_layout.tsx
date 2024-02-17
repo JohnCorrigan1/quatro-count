@@ -1,5 +1,5 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Stack, Tabs, useNavigation } from "expo-router";
+import { Tabs, useNavigation } from "expo-router";
 import { useColorScheme } from "react-native";
 import Colors from "../../../constants/Colors";
 import { useQueryClient } from "@tanstack/react-query";
@@ -23,12 +23,9 @@ export default function TabLayout() {
     "groupParams",
   ]);
 
-  const parentLayout = useNavigation("");
-
   return (
     <Tabs
       screenOptions={{
-        // headerShown: false,
         title: "Group",
         headerTitle: "Grouper",
         tabBarActiveTintColor:
@@ -38,7 +35,6 @@ export default function TabLayout() {
         name="expenses"
         initialParams={groupParams ?? {}}
         options={{
-          // headerShown: false,
           headerTitle: "Expenses",
           title: "Expenses",
           tabBarIcon: ({ color }) => (

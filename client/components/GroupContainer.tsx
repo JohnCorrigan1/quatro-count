@@ -80,15 +80,6 @@ const Group = (props: GroupProps) => {
   };
 
   return (
-    // <Link
-    //   href={{
-    //     pathname: "/group",
-    //     params: {
-    //       name: props.name.replace(" ", "").toLowerCase(),
-    //       gid: props.id,
-    //     },
-    //   }}
-    //   asChild>
     <Pressable onPress={navigateToGroup}>
       <View style={styles.group}>
         <View style={styles.text}>
@@ -104,7 +95,5 @@ const Group = (props: GroupProps) => {
         />
       </View>
     </Pressable>
-    //{" "}
-    // </Link>
   );
 };
