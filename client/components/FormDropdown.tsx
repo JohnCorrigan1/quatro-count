@@ -1,38 +1,29 @@
 import RNPickerSelect from "react-native-picker-select";
-import { Text, View, StyleSheet } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
+import { StyleSheet, useColorScheme } from "react-native";
 
 export const FormDropdown = (props: any) => {
+  const colorScheme = useColorScheme();
   return (
     <RNPickerSelect
       placeholder={{}}
       value={props.value}
       onValueChange={(value) => props.setValue(value)}
-      items={props.items}>
-      <View style={styles.dropdown}>
-        <Text style={styles.label}>{props.value}</Text>
-        <FontAwesome
-          name="chevron-down"
-          size={14}
-          color="black"
-        />
-      </View>
-    </RNPickerSelect>
+      darkTheme={colorScheme === "dark"}
+      style={{
+        chevronContainer: { display: "none" },
+        modalViewBottom: {
+          backgroundColor: "white",
+        },
+        modalViewMiddle: { backgroundColor: "white" },
+        modalViewMiddleDark: { backgroundColor: "gray" },
+        modalViewBottomDark: {
+          backgroundColor: "black",
+        },
+        inputIOS: {
+          color: "white",
+        },
+        inputAndroid: { color: "white" },
+      }}
+      items={props.items}></RNPickerSelect>
   );
 };
-
-const styles = StyleSheet.create({
-  dropdown: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: "600",
-    textAlign: "left",
-    width: "80%",
-    color: "white",
-  },
-});

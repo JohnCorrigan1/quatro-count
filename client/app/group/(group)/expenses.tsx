@@ -51,29 +51,6 @@ export default function GroupPage() {
 
   return (
     <>
-      {/* <Stack.Screen
-        options={{
-          headerBackTitle: "Groups",
-          headerBackButtonMenuEnabled: false,
-          headerBackVisible: false,
-          title: data?.name,
-          headerLeft: () => (
-            <Pressable onPress={() => router.back()}>
-              {({ pressed }) => (
-                <FontAwesome
-                  name="arrow-left"
-                  size={20}
-                  color={Colors[colorScheme ?? "light"].text}
-                  style={{
-                    marginLeft: 10,
-                    opacity: pressed ? 0.5 : 1,
-                  }}
-                />
-              )}
-            </Pressable>
-          ),
-        }}
-      />*/}
       <Stack.Screen options={{ headerShown: false }} />
       <ScrollView>
         {isLoading ? (

@@ -63,3 +63,9 @@ def accept_invitation():
     
     return {"message": "Invitation accepted"}
 
+@groups.route("/balances", methods=['GET'])
+@cross_origin()
+def get_group_balances():
+    group_id = request.get_json().get('groupId', '')
+    return helpers.get_group_members(group_id)
+

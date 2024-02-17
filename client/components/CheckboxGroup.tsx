@@ -2,6 +2,7 @@ import { View, Text, Pressable } from "react-native";
 import { formStyles } from "../app/lib/staticStyles";
 import Checkbox from "expo-checkbox";
 import { PaidFor } from "../app/lib/types";
+import { useEffect, useState } from "react";
 
 type CheckboxGroupProps = {
   paidFor: PaidFor[];
@@ -12,6 +13,7 @@ type CheckboxGroupProps = {
 export const CheckboxGroup = (
   props: CheckboxGroupProps
 ) => {
+  const [amountPer, setAmountPer] = useState(0.0);
   const updatePaidFor = (groupMemberId: number) => {
     const updated: PaidFor[] = props.paidFor!.map(
       (member: any) => {
@@ -23,30 +25,52 @@ export const CheckboxGroup = (
     );
     props.setPaidFor(updated);
   };
+
+  useEffect(() => {
+    if (props.paidFor) {
+      setAmountPer(
+        parseFloat(props.amount) /
+          props.paidFor.filter((member) => member.included)
+            .length
+      );
+    }
+  }, [props.paidFor, props.amount]);
+
   return (
     <View style={formStyles.checkboxGroup}>
       {props.paidFor?.map((member) => (
         <Pressable
           key={member.groupMemberId}
+          // style={formStyles.checkbox}
           onPress={() =>
             updatePaidFor(member.groupMemberId)
           }>
           <View style={formStyles.checkbox}>
-            <View>
+            <View
+              style={{
+                display: "flex",
+                gap: 24,
+                flexDirection: "row",
+              }}>
+              <Checkbox value={member.included} />
               <Text style={formStyles.label}>
                 {member.username}
               </Text>
-              <Checkbox value={member.included} />
             </View>
-            <Text style={formStyles.label}>
-              $
-              {0
-                ? props.amount == "0"
-                : (
-                    parseFloat(props.amount) /
-                    props.paidFor.length
-                  ).toFixed(2)}
-            </Text>
+            <View
+              style={{
+                width: "100%",
+                paddingRight: 24,
+              }}>
+              <Text style={formStyles.label}>
+                $
+                {member.included
+                  ? amountPer
+                    ? amountPer
+                    : "0"
+                  : "0"}
+              </Text>
+            </View>
           </View>
         </Pressable>
       ))}

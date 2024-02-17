@@ -5,17 +5,17 @@ import {
   useMutation,
 } from "@tanstack/react-query";
 import { formStyles } from "../app/lib/staticStyles";
-import { View, Text, Pressable } from "react-native";
+import { View, Text } from "react-native";
 import {
   type PaidByMap,
   type PaidFor,
   type Group,
   type CurrentUser,
 } from "../app/lib/types";
-import { TextInput } from "react-native-gesture-handler";
 import { CheckboxGroup } from "../components/CheckboxGroup";
 import { FormDropdown } from "../components/FormDropdown";
 import { Button } from "react-native-elements";
+import { TxtInput } from "./TxtInput";
 
 export const ExpenseForm = () => {
   const queryClient = useQueryClient();
@@ -113,19 +113,13 @@ export const ExpenseForm = () => {
   return (
     <View style={formStyles.form}>
       <Text style={formStyles.label}>Expense:</Text>
-      <TextInput
-        value={title}
-        inputMode="text"
-        onChange={(e) => setTitle(e.nativeEvent.text)}
-        style={formStyles.input}
-      />
+      <TxtInput value={title} setValue={setTitle} />
       <Text style={formStyles.label}>Amount:</Text>
-      <TextInput
+      <TxtInput
         placeholder="$0.00"
-        inputMode="decimal"
-        value={amount == "0" ? "" : amount}
-        onChange={(e) => setAmount(e.nativeEvent.text)}
-        style={formStyles.input}
+        value={amount}
+        setValue={setAmount}
+        keyboardType="numeric"
       />
       <Text style={formStyles.label}>Paid By:</Text>
       {paidByMap && paidBy ? (
